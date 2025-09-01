@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+
 import 'package:slide_to_act/slide_to_act.dart';
 import 'package:talkie/utils/constants/colors.dart';
 import 'package:talkie/utils/constants/images.dart';
@@ -11,10 +13,10 @@ class WelcomeSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SlideAction(
-      onSubmit: () {},
+      onSubmit: () => Get.offAllNamed('/auth'),
       text: 'Slide to start now',
       textStyle: TText.labelLarge,
-      sliderButtonIcon: Container(
+      sliderButtonIcon: SizedBox(
         height: 25,
         width: 25,
         child: SvgPicture.asset(AssetsImages.plugSVG),

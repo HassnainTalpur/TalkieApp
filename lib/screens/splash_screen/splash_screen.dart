@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:talkie/utils/widgets/welcome_heading.dart';
-import 'package:talkie/utils/widgets/welcome_page.dart';
-import 'package:talkie/utils/widgets/welcome_slider.dart';
+import 'package:talkie/screens/splash_screen/widgets/welcome_page.dart';
+import 'package:talkie/screens/splash_screen/widgets/welcome_slider.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
