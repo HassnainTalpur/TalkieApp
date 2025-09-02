@@ -10,7 +10,6 @@ class PrimaryButton extends StatelessWidget {
   });
   final IconData buttonIcon;
   final String buttonText;
-
   @override
   Widget build(BuildContext context) {
     return Row(
