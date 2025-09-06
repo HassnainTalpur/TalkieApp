@@ -10,4 +10,9 @@ class AssetsImages {
 
   static const String connectSVG = '$iconsPath/connect.svg';
   static const String plugSVG = 'assets/Icons/plug.svg';
+
+  static const String chatStatusSVG = 'assets/Icons/chatStatus.svg';
+  static const String chatSendSVG = 'assets/Icons/send.svg';
+  static const String chatGallerySVG = 'assets/Icons/gallary.svg';
+  static const String chatMicSVG = 'assets/Icons/mic.svg';
 }
