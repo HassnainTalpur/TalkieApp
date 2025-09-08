@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:talkie/controller/auth_controller.dart';
 import 'package:talkie/utils/constants/colors.dart';
 import 'package:talkie/utils/constants/text.dart';
 import 'package:talkie/utils/widgets/primary_button.dart';
@@ -10,10 +14,14 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
+    final AuthController authController = Get.put(AuthController());
     return Column(
       children: [
         SizedBox(height: 20),
         TextField(
+          controller: emailController,
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             hintText: 'Email',
@@ -23,6 +31,7 @@ class LoginForm extends StatelessWidget {
         ),
         SizedBox(height: 20),
         TextField(
+          controller: passwordController,
           obscureText: true,
           keyboardType: TextInputType.visiblePassword,
           decoration: InputDecoration(
@@ -32,15 +41,20 @@ class LoginForm extends StatelessWidget {
           ),
         ),
         SizedBox(height: 50),
-        InkWell(
-          onTap: () {
-            Get.offAllNamed('/home');
-          },
-          child: PrimaryButton(
-            buttonIcon: Icons.lock_outlined,
-            buttonText: 'LOGIN',
-          ),
-        ),
+        authController.isLoading.value
+            ? CircularProgressIndicator()
+            : InkWell(
+                onTap: () {
+                  authController.logIn(
+                    emailController.text,
+                    passwordController.text,
+                  );
+                },
+                child: PrimaryButton(
+                  buttonIcon: Icons.lock_outlined,
+                  buttonText: 'LOGIN',
+                ),
+              ),
       ],
     );
   }
