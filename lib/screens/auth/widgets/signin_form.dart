@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:talkie/controller/auth_controller.dart';
 import 'package:talkie/utils/constants/colors.dart';

@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/get_instance.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:talkie/controller/auth_controller.dart';
 import 'package:talkie/utils/constants/colors.dart';
 import 'package:talkie/utils/constants/text.dart';

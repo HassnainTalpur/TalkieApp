@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:talkie/screens/home_screen/widgets/chat_list.dart';
 import 'package:talkie/screens/home_screen/widgets/tab_bar.dart';
 import 'package:talkie/utils/constants/colors.dart';
@@ -33,7 +34,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         titleTextStyle: TText.headlineSmall.copyWith(color: Colors.white),
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.more_vert_outlined)),
+          IconButton(
+            onPressed: () {
+              Get.offAllNamed('/profile');
+            },
+            icon: Icon(Icons.more_vert_outlined),
+          ),
         ],
         bottom: MyTabBar(tabController: tabController),
       ),

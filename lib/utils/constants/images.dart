@@ -15,4 +15,9 @@ class AssetsImages {
   static const String chatSendSVG = 'assets/Icons/send.svg';
   static const String chatGallerySVG = 'assets/Icons/gallary.svg';
   static const String chatMicSVG = 'assets/Icons/mic.svg';
+
+  static const String callSVG = 'assets/Icons/call.svg';
+  static const String videoSVG = 'assets/Icons/videoCall.svg';
+  static const String chatSVG = 'assets/Icons/app_icon.svg';
+  static const String deleteSVG = 'assets/Icons/delete.svg';
 }

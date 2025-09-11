@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:talkie/utils/widgets/welcome_heading.dart';
-import 'package:talkie/screens/splash_screen/widgets/welcome_page.dart';
-import 'package:talkie/screens/splash_screen/widgets/welcome_slider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:talkie/controller/splash_controller.dart';
+import 'package:talkie/utils/constants/images.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final SplashController splashController = Get.put(SplashController());
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [WelcomeHeading(), WelcomePage(), WelcomeSlider()],
-          ),
-        ),
-      ),
+      body: Center(child: SvgPicture.asset(AssetsImages.appIconSVG)),
     );
   }
 }
