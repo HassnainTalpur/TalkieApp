@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:talkie/controller/profile_controller.dart';
 import 'package:talkie/screens/profile/widgets/profile_button.dart';
 import 'package:talkie/utils/constants/colors.dart';
 import 'package:talkie/utils/constants/images.dart';
@@ -6,9 +8,9 @@ import 'package:talkie/utils/constants/text.dart';
 
 class UserInfo extends StatelessWidget {
   const UserInfo({super.key});
-
   @override
   Widget build(BuildContext context) {
+    final profileController = Get.put(ProfileController());
     return Container(
       //height: 300,
       padding: EdgeInsets.all(20),
@@ -26,8 +28,18 @@ class UserInfo extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [Image.asset(AssetsImages.boyPic)],
                 ),
-                Text('YOUR NAME', style: TText.bodyMedium),
-                Text('YOUR EMAIL@hotmail.com', style: TText.labelMedium),
+                Obx(
+                  () => Text(
+                    profileController.currentUser.value.email ?? '',
+                    style: TText.bodyMedium,
+                  ),
+                ),
+                Obx(
+                  () => Text(
+                    profileController.currentUser.value.name ?? '',
+                    style: TText.labelSmall,
+                  ),
+                ),
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

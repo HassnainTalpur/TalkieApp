@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:talkie/controller/profile_controller.dart';
+import 'package:talkie/models/user_model.dart';
 import 'package:talkie/screens/home_screen/widgets/chat_list.dart';
 import 'package:talkie/screens/home_screen/widgets/tab_bar.dart';
 import 'package:talkie/utils/constants/colors.dart';
@@ -17,7 +21,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    final TabController tabController = TabController(length: 3, vsync: this);
+    final TabController tabController = TabController(length: 1, vsync: this);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
@@ -30,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: SvgPicture.asset(AssetsImages.appIconSVG),
         ),
         leadingWidth: MediaQuery.of(context).size.width * 0.1,
-        title: Text('TALKIE'),
+        title: Text('Talkie'),
         titleTextStyle: TText.headlineSmall.copyWith(color: Colors.white),
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.search)),

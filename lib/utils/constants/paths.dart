@@ -3,6 +3,7 @@ import 'package:talkie/screens/auth/auth_screen.dart';
 import 'package:talkie/screens/chat/chat_screen.dart';
 import 'package:talkie/screens/home_screen/home_screen.dart';
 import 'package:talkie/screens/profile/profile_screen.dart';
+import 'package:talkie/screens/profile/update_profile.dart';
 
 var pagePath = [
   GetPage(
@@ -23,6 +24,11 @@ var pagePath = [
   GetPage(
     name: '/profile',
     page: () => ProfileScreen(),
+    transition: Transition.rightToLeft,
+  ),
+  GetPage(
+    name: '/updateprofile',
+    page: () => UpdateProfile(),
     transition: Transition.rightToLeft,
   ),
 ];

@@ -9,7 +9,7 @@ class SigninForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController fullNameController = TextEditingController();
+    final TextEditingController nameController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
     final AuthController authController = AuthController();
@@ -17,7 +17,7 @@ class SigninForm extends StatelessWidget {
       children: [
         SizedBox(height: 20),
         TextField(
-          controller: fullNameController,
+          controller: nameController,
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             hintText: 'Full Name',
@@ -52,6 +52,7 @@ class SigninForm extends StatelessWidget {
             authController.signUp(
               emailController.text,
               passwordController.text,
+              nameController.text,
             );
           },
           child: PrimaryButton(
