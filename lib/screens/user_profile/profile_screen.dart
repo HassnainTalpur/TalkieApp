@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:talkie/controller/auth_controller.dart';
-import 'package:talkie/controller/profile_controller.dart';
-import 'package:talkie/screens/profile/widgets/user_info.dart';
+import 'package:talkie/screens/update_profile/widgets/user_info.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -12,14 +11,7 @@ class ProfileScreen extends StatelessWidget {
     final AuthController authController = Get.put(AuthController());
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () {
-              Get.offAllNamed('/updateprofile');
-            },
-            icon: Icon(Icons.edit),
-          ),
-        ],
+        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.edit))],
         actionsPadding: EdgeInsets.only(left: 8),
         leading: IconButton(
           onPressed: () {
@@ -27,7 +19,7 @@ class ProfileScreen extends StatelessWidget {
           },
           icon: Icon(Icons.arrow_back_ios_new_rounded),
         ),
-        title: Text('Profile'),
+        title: Text('Back'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),

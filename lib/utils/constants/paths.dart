@@ -2,8 +2,9 @@ import 'package:get/get.dart';
 import 'package:talkie/screens/auth/auth_screen.dart';
 import 'package:talkie/screens/chat/chat_screen.dart';
 import 'package:talkie/screens/home_screen/home_screen.dart';
-import 'package:talkie/screens/profile/profile_screen.dart';
-import 'package:talkie/screens/profile/update_profile.dart';
+import 'package:talkie/screens/update_profile/edit_profile.dart';
+import 'package:talkie/screens/user_profile/profile_screen.dart';
+import 'package:talkie/screens/update_profile/update_profile.dart';
 
 var pagePath = [
   GetPage(
@@ -29,6 +30,11 @@ var pagePath = [
   GetPage(
     name: '/updateprofile',
     page: () => UpdateProfile(),
+    transition: Transition.rightToLeft,
+  ),
+  GetPage(
+    name: '/editprofile',
+    page: () => EditProfile(),
     transition: Transition.rightToLeft,
   ),
 ];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:talkie/utils/constants/colors.dart';
 import 'package:talkie/utils/constants/text.dart';
 import 'package:talkie/utils/widgets/primary_button.dart';
@@ -9,7 +10,16 @@ class UpdateProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Update Profile')),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Get.offAllNamed('/home');
+          },
+          icon: Icon(Icons.arrow_back_ios_new),
+        ),
+        title: Text('Update Profile'),
+        titleTextStyle: TText.bodyLarge,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:talkie/controller/profile_controller.dart';
-import 'package:talkie/screens/profile/widgets/profile_button.dart';
+import 'package:talkie/screens/update_profile/widgets/profile_button.dart';
 import 'package:talkie/utils/constants/colors.dart';
 import 'package:talkie/utils/constants/images.dart';
 import 'package:talkie/utils/constants/text.dart';
