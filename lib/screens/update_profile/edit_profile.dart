@@ -1,8 +1,3 @@
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,19 +14,17 @@ class EditProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthController authController = AuthController();
+
+    final ImageController imageController = Get.put(ImageController());
     ProfileController profileController = Get.put(ProfileController());
     RxBool isEditing = false.obs;
 
-    final TextEditingController nameController = TextEditingController(
-      text: profileController.currentUser.value.name,
-    );
-    final TextEditingController aboutController = TextEditingController(
-      text: 'YOUR BIO',
-    );
-
-    final ImageController imageController = Get.put(ImageController());
-
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print(imageController.image.value);
+        },
+      ),
       appBar: AppBar(
         title: Text('Profile'),
         leading: IconButton(
@@ -77,7 +70,7 @@ class EditProfile extends StatelessWidget {
                                                   imageController.image.value!,
                                                 )
                                               : AssetImage(
-                                                  AssetsImages.appIconSVG,
+                                                  AssetsImages.uploadPic,
                                                 ),
                                           backgroundColor: tBackgroundColor,
                                           radius: 80,
@@ -85,9 +78,16 @@ class EditProfile extends StatelessWidget {
                                       )
                                     : CircleAvatar(
                                         backgroundImage:
-                                            imageController.image.value != null
-                                            ? FileImage(
-                                                imageController.image.value!,
+                                            profileController
+                                                    .currentUser
+                                                    .value
+                                                    .profileImage !=
+                                                null
+                                            ? NetworkImage(
+                                                profileController
+                                                    .currentUser
+                                                    .value
+                                                    .profileImage!,
                                               )
                                             : AssetImage(
                                                 AssetsImages.appIconSVG,
@@ -104,7 +104,7 @@ class EditProfile extends StatelessWidget {
                                 decoration: InputDecoration(
                                   filled: isEditing.value,
                                   enabled: isEditing.value,
-                                  labelText: 'AHHHHH',
+                                  labelText: 'Name',
                                   prefixIcon: Icon(
                                     Icons.precision_manufacturing_outlined,
                                   ),
@@ -112,35 +112,63 @@ class EditProfile extends StatelessWidget {
                               );
                             }),
                             SizedBox(height: 10),
-                            Obx(
-                              () => TextField(
-                                controller: aboutController,
+                            Obx(() {
+                              return TextFormField(
+                                controller: profileController.aboutController,
                                 decoration: InputDecoration(
                                   filled: isEditing.value,
                                   enabled: isEditing.value,
                                   labelText: 'About',
-                                  prefixIcon: Icon(Icons.woo_commerce_outlined),
+                                  prefixIcon: Icon(Icons.adobe_outlined),
                                 ),
-                              ),
-                            ),
+                              );
+                            }),
 
                             SizedBox(height: 10),
-                            TextField(
-                              decoration: InputDecoration(
-                                filled: isEditing.value,
-                                enabled: isEditing.value,
-                                labelText: 'YOUREMAIL@.com',
-                                hintText: 'EMail',
-                                prefixIcon: Icon(Icons.woo_commerce_outlined),
+                            Obx(
+                              () => TextField(
+                                decoration: InputDecoration(
+                                  enabled: false,
+                                  filled: false,
+                                  labelText:
+                                      profileController.currentUser.value.email,
+                                  hintText: 'Email',
+                                  prefixIcon: Icon(Icons.woo_commerce_outlined),
+                                ),
                               ),
                             ),
 
                             SizedBox(height: 20),
                             Obx(
                               () => InkWell(
-                                onTap: () {
+                                onTap: () async {
                                   isEditing.value = !isEditing.value;
-                                  print(nameController);
+                                  await imageController.uploadImage(
+                                    imageController.image,
+                                    authController.auth.currentUser!.uid,
+                                  );
+                                  if (!isEditing.value) {
+                                    imageController.image.value = null;
+                                    final newName =
+                                        profileController.nameController.text;
+                                    final newAbout =
+                                        profileController.aboutController.text;
+                                    await profileController.updateProfile(
+                                      newName,
+                                      newAbout,
+                                    );
+
+                                    await profileController.getUserDetails();
+                                    print("!!!!!!!!!!!!!!!!! NAME CONTROLLER ");
+                                    print(newAbout);
+                                    print("!!!!!!!!!!!!!!!!! NAME CONTROLLER ");
+                                    print(
+                                      profileController
+                                          .currentUser
+                                          .value
+                                          .profileImage,
+                                    );
+                                  }
                                 },
                                 child: isEditing.value
                                     ? PrimaryButton(

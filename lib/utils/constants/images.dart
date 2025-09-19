@@ -4,6 +4,7 @@ class AssetsImages {
   //Images
   static const String boyPic = '$iconsPath/boy_pic.png';
   static const String girlPic = '$iconsPath/girl_pic.png';
+  static const String uploadPic = '$iconsPath/image_13407003.png';
 
   //Icons
   static const String appIconSVG = 'assets/Icons/app_icon.svg';

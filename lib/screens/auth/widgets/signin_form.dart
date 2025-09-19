@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:talkie/controller/auth_controller.dart';
 import 'package:talkie/utils/constants/colors.dart';
 import 'package:talkie/utils/constants/text.dart';
@@ -54,6 +55,7 @@ class SigninForm extends StatelessWidget {
               passwordController.text,
               nameController.text,
             );
+            Get.offAllNamed('/home');
           },
           child: PrimaryButton(
             buttonIcon: Icons.lock_open_rounded,

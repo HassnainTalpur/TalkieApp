@@ -17,10 +17,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    final TabController tabController = TabController(length: 1, vsync: this);
+    final TabController tabController = TabController(length: 3, vsync: this);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Get.offAllNamed('/search');
+        },
         backgroundColor: tPrimaryColor,
         child: Icon(Icons.add),
       ),

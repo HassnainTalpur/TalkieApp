@@ -29,10 +29,10 @@ class UserModel {
     email = json["email"];
     profileImage = json["profileImage"];
     phoneNumber = json["phoneNumber"];
-    about = json["About"];
-    createdAt = json["CreatedAt"];
-    lastOnlineStatus = json["LastOnlineStatus"];
-    status = json["Status"];
+    about = json["about"];
+    createdAt = json["createdAt"];
+    lastOnlineStatus = json["lastOnlineStatus"];
+    status = json["status"];
     role = json["role"];
   }
 
@@ -43,10 +43,10 @@ class UserModel {
     _data["email"] = email;
     _data["profileImage"] = profileImage;
     _data["phoneNumber"] = phoneNumber;
-    _data["About"] = about;
-    _data["CreatedAt"] = createdAt;
-    _data["LastOnlineStatus"] = lastOnlineStatus;
-    _data["Status"] = status;
+    _data["about"] = about;
+    _data["createdAt"] = createdAt;
+    _data["lastOnlineStatus"] = lastOnlineStatus;
+    _data["status"] = status;
     _data["role"] = role;
     return _data;
   }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:talkie/models/user_model.dart';
 
@@ -51,7 +52,12 @@ class AuthController extends GetxController {
 
   Future<void> inIt(String email, String name) async {
     try {
-      var newUser = UserModel(email: email, name: name);
+      var newUser = UserModel(
+        email: email,
+        name: name,
+        id: auth.currentUser!.uid,
+        createdAt: DateTime.now().toString(),
+      );
       await db
           .collection('users')
           .doc(auth.currentUser!.uid)
