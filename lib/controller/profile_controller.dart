@@ -17,8 +17,6 @@ class ProfileController extends GetxController {
     nameController = TextEditingController(text: currentUser.value.name);
     aboutController = TextEditingController(text: currentUser.value.about);
     await getUserDetails();
-    print(currentUser.value.about);
-    print(currentUser.value.name);
   }
 
   Future<void> getUserDetails() async {

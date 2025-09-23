@@ -18,11 +18,7 @@ var pagePath = [
     page: () => HomeScreen(),
     transition: Transition.rightToLeft,
   ),
-  GetPage(
-    name: '/chat',
-    page: () => ChatScreen(),
-    transition: Transition.rightToLeft,
-  ),
+
   GetPage(
     name: '/profile',
     page: () => ProfileScreen(),

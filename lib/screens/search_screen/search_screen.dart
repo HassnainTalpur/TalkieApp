@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:talkie/controller/chat_controller.dart';
+import 'package:talkie/controller/contact_controller.dart';
+import 'package:talkie/screens/chat/chat_screen.dart';
 import 'package:talkie/screens/home_screen/widgets/chat_tile.dart';
 import 'package:talkie/screens/search_screen/widgets/new_contact_tile.dart';
 import 'package:talkie/screens/search_screen/widgets/search_contact.dart';
-import 'package:talkie/utils/constants/images.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -11,6 +13,8 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Rx<bool> searching = false.obs;
+    final ContactController contactController = Get.put(ContactController());
+    final ChatController chatController = Get.put(ChatController());
 
     return Scaffold(
       appBar: AppBar(
@@ -40,29 +44,23 @@ class SearchScreen extends StatelessWidget {
             SizedBox(height: 10),
             Text('Contacts on Talkie'),
             SizedBox(height: 10),
-            ChatTile(
-              contactName: 'hasnain',
-              lastChat: 'sned noods',
-              delieveryTime: '10:30',
-              imageUrl: AssetsImages.boyPic,
-            ),
-            ChatTile(
-              contactName: 'hasnain',
-              lastChat: 'sned noods',
-              delieveryTime: '10:30',
-              imageUrl: AssetsImages.boyPic,
-            ),
-            ChatTile(
-              contactName: 'hasnain',
-              lastChat: 'sned noods',
-              delieveryTime: '10:30',
-              imageUrl: AssetsImages.boyPic,
-            ),
-            ChatTile(
-              contactName: 'hasnain',
-              lastChat: 'sned noods',
-              delieveryTime: '10:30',
-              imageUrl: AssetsImages.boyPic,
+
+            Obx(
+              () => Column(
+                children: contactController.userList.map((e) {
+                  return InkWell(
+                    onTap: () async {
+                      Get.to(() => ChatScreen(userModel: e));
+                    },
+                    child: ChatTile(
+                      contactName: e.name ?? '',
+                      lastChat: e.about ?? '',
+                      delieveryTime: 'delieveryTime',
+                      imageUrl: e.profileImage ?? '',
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ],
         ),

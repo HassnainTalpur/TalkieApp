@@ -15,25 +15,25 @@ class ChatList extends StatelessWidget {
       child: ListView(
         children: [
           ChatTile(
-            imageUrl: AssetsImages.boyPic,
+            imageUrl: '',
             contactName: 'Mir',
             lastChat: 'Sned Noods',
             delieveryTime: '10:00 pm',
           ),
           ChatTile(
-            imageUrl: AssetsImages.boyPic,
+            imageUrl: '',
             contactName: 'Hasnain',
             lastChat: 'Pwease',
             delieveryTime: '4:00 am',
           ),
           ChatTile(
-            imageUrl: AssetsImages.girlPic,
+            imageUrl: '',
             contactName: 'Haider',
             lastChat: 'uwu',
             delieveryTime: '5:00 am',
           ),
           ChatTile(
-            imageUrl: AssetsImages.girlPic,
+            imageUrl: '',
             contactName: 'Mir',
             lastChat: 'Sned Noods',
             delieveryTime: '10:00 am',

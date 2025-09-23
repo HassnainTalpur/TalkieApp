@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:talkie/utils/constants/colors.dart';
+import 'package:talkie/utils/constants/images.dart';
 import 'package:talkie/utils/constants/text.dart';
 
 class ChatTile extends StatelessWidget {
@@ -29,7 +30,13 @@ class ChatTile extends StatelessWidget {
         children: [
           Row(
             children: [
-              Image.asset(imageUrl, width: 60),
+              CircleAvatar(
+                backgroundImage: imageUrl != ''
+                    ? NetworkImage(imageUrl)
+                    : AssetImage(AssetsImages.boyPic),
+                radius: 30,
+              ),
+
               const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:talkie/controller/auth_controller.dart';
+import 'package:talkie/controller/contact_controller.dart';
 import 'package:talkie/controller/image_controller.dart';
 import 'package:talkie/controller/profile_controller.dart';
 import 'package:talkie/utils/constants/colors.dart';
@@ -17,12 +18,13 @@ class EditProfile extends StatelessWidget {
 
     final ImageController imageController = Get.put(ImageController());
     ProfileController profileController = Get.put(ProfileController());
+    ContactController contactController = Get.put(ContactController());
     RxBool isEditing = false.obs;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print(imageController.image.value);
+          print(contactController.userList);
         },
       ),
       appBar: AppBar(
