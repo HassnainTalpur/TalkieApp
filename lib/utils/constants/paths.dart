@@ -20,11 +20,6 @@ var pagePath = [
   ),
 
   GetPage(
-    name: '/profile',
-    page: () => ProfileScreen(),
-    transition: Transition.rightToLeft,
-  ),
-  GetPage(
     name: '/updateprofile',
     page: () => UpdateProfile(),
     transition: Transition.rightToLeft,

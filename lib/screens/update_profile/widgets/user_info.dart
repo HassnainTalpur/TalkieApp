@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:talkie/controller/profile_controller.dart';
+import 'package:talkie/screens/search_screen/widgets/display_pic.dart';
 import 'package:talkie/screens/update_profile/widgets/profile_button.dart';
 import 'package:talkie/utils/constants/colors.dart';
 import 'package:talkie/utils/constants/images.dart';
 import 'package:talkie/utils/constants/text.dart';
 
 class UserInfo extends StatelessWidget {
-  const UserInfo({super.key});
+  const UserInfo({
+    super.key,
+    required this.name,
+    required this.email,
+    required this.imageUrl,
+  });
+  final String name;
+  final String email;
+  final String imageUrl;
   @override
   Widget build(BuildContext context) {
-    final profileController = Get.put(ProfileController());
     return Container(
       //height: 300,
       padding: EdgeInsets.all(20),
@@ -26,20 +33,11 @@ class UserInfo extends StatelessWidget {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Image.asset(AssetsImages.boyPic)],
+                  children: [DisplayPic(imageUrl: imageUrl, radius: 50)],
                 ),
-                Obx(
-                  () => Text(
-                    profileController.currentUser.value.email ?? '',
-                    style: TText.bodyMedium,
-                  ),
-                ),
-                Obx(
-                  () => Text(
-                    profileController.currentUser.value.name ?? '',
-                    style: TText.labelSmall,
-                  ),
-                ),
+                SizedBox(height: 10),
+                Text(name, style: TText.bodyMedium),
+                Text(email, style: TText.labelSmall),
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

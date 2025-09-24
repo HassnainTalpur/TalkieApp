@@ -13,9 +13,8 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Rx<bool> searching = false.obs;
-    final ContactController contactController = Get.put(ContactController());
     final ChatController chatController = Get.put(ChatController());
-
+    final ContactController contactController = Get.put(ContactController());
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -55,7 +54,11 @@ class SearchScreen extends StatelessWidget {
                     child: ChatTile(
                       contactName: e.name ?? '',
                       lastChat: e.about ?? '',
-                      delieveryTime: 'delieveryTime',
+
+                      delieveryTime:
+                          e.email == chatController.auth.currentUser!.email
+                          ? 'You'
+                          : '10:00',
                       imageUrl: e.profileImage ?? '',
                     ),
                   );

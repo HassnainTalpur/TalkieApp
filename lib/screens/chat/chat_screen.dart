@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:talkie/controller/auth_controller.dart';
 import 'package:talkie/controller/chat_controller.dart';
 import 'package:talkie/controller/profile_controller.dart';
-import 'package:talkie/models/chat_model.dart';
 import 'package:talkie/models/user_model.dart';
 import 'package:talkie/screens/chat/widgets/chat_bubble.dart';
+import 'package:talkie/screens/search_screen/widgets/display_pic.dart';
+import 'package:talkie/screens/update_profile/update_profile.dart';
+import 'package:talkie/screens/update_profile/widgets/user_info.dart';
+import 'package:talkie/screens/user_profile/profile_screen.dart';
 import 'package:talkie/utils/constants/colors.dart';
 import 'package:talkie/utils/constants/images.dart';
 import 'package:talkie/utils/constants/text.dart';
@@ -25,27 +29,39 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Get.offAllNamed('/home');
+        leading: InkWell(
+          onTap: () {
+            Get.to(() => ProfileScreen(userModel: userModel));
           },
-          icon: Icon(Icons.arrow_back_ios),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: DisplayPic(imageUrl: userModel.profileImage ?? ''),
+          ),
         ),
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.call)),
           IconButton(onPressed: () {}, icon: Icon(Icons.video_call)),
         ],
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(userModel.name ?? '', style: TText.bodyLarge),
-            Text('online', style: TText.labelMedium),
-          ],
+        title: InkWell(
+          onTap: () {
+            Get.to(() => ProfileScreen(userModel: userModel));
+          },
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(userModel.name ?? '', style: TText.bodyLarge),
+                  Text('online', style: TText.labelMedium),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
-        margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+        margin: EdgeInsets.symmetric(horizontal: 5),
         padding: EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           color: tContainerColor,
@@ -82,6 +98,7 @@ class ChatScreen extends StatelessWidget {
                     userModel.id!,
                     messageController.text,
                     profileController.currentUser.value.name!,
+                    userModel,
                   );
                   messageController.clear();
                 }
@@ -99,7 +116,12 @@ class ChatScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(
+                bottom: 25,
+                top: 10,
+                left: 10,
+                right: 10,
+              ),
               child: StreamBuilder(
                 stream: chatController.getMessages(userModel.id!),
                 builder: (context, snapshot) {
@@ -113,20 +135,22 @@ class ChatScreen extends StatelessWidget {
                     return Center(child: Text(snapshot.error.toString()));
                   } else {
                     return ListView.builder(
-                      reverse: false,
+                      reverse: true,
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
-                        print(
-                          "senderId: ${snapshot.data![index].senderId}, "
-                          "currentUserId: ${profileController.currentUser.value.id}",
+                        DateTime timestamp = DateTime.parse(
+                          snapshot.data![index].timestamp!,
                         );
+                        String formatTime = DateFormat(
+                          'hh:mm',
+                        ).format(timestamp);
                         return Obx(
                           () => ChatBubble(
                             isComing:
                                 snapshot.data![index].senderId !=
                                 profileController.currentUser.value.id,
                             message: snapshot.data![index].message!,
-                            time: 'time',
+                            time: formatTime,
                             imageUrl: '',
                             status: 'status',
                           ),

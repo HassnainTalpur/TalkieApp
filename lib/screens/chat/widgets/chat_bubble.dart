@@ -59,7 +59,6 @@ class ChatBubble extends StatelessWidget {
                     ],
                   ),
           ),
-          SizedBox(height: 10),
           Row(
             mainAxisAlignment: isComing
                 ? MainAxisAlignment.start
