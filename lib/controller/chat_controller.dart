@@ -11,6 +11,7 @@ class ChatController extends GetxController {
   final auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
   final uuid = Uuid();
+
   ProfileController profileController = Get.put(ProfileController());
   String getRoomId(String targetUserId) {
     String currentUserId = auth.currentUser!.uid;
@@ -39,6 +40,7 @@ class ChatController extends GetxController {
     );
     var roomDetails = ChatRoomModel(
       id: roomId,
+      participants: [auth.currentUser!.uid, targetUserId],
       sender: targetUser,
       receiver: profileController.currentUser.value,
       lastMessage: message,
@@ -70,5 +72,36 @@ class ChatController extends GetxController {
               .map((doc) => ChatModel.fromJson(doc.data()))
               .toList(),
         );
+  }
+
+  Stream<List<ChatRoomModel>> chatRooms() {
+    return db
+        .collection('chats')
+        .where('participants', arrayContains: auth.currentUser!.uid)
+        .orderBy('lastMessageTimestamp', descending: true)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            final data = doc.data();
+            return ChatRoomModel.fromJson(data);
+          }).toList();
+        });
+  }
+
+  Future<void> refreshChatRooms() async {
+    // Small delay to simulate refresh
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Optionally, you could force a fetch by clearing cache
+    // but since .snapshots() auto-updates, this is often enough
+    update();
+  }
+
+  Stream<UserModel> getUserStream(String uid) {
+    return db
+        .collection('users')
+        .doc(uid)
+        .snapshots()
+        .map((snapshot) => UserModel.fromJson(snapshot.data()!));
   }
 }

@@ -47,7 +47,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: TabBarView(controller: tabController, children: [ChatList()]),
+        child: TabBarView(
+          controller: tabController,
+          children: [
+            ChatList(), // Tab 1
+            Center(child: Text("Status")), // Tab 2 placeholder
+            Center(child: Text("Calls")), // Tab 3 placeholder
+          ],
+        ),
       ),
     );
   }

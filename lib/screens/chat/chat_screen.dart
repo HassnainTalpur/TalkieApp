@@ -8,8 +8,6 @@ import 'package:talkie/controller/profile_controller.dart';
 import 'package:talkie/models/user_model.dart';
 import 'package:talkie/screens/chat/widgets/chat_bubble.dart';
 import 'package:talkie/screens/search_screen/widgets/display_pic.dart';
-import 'package:talkie/screens/update_profile/update_profile.dart';
-import 'package:talkie/screens/update_profile/widgets/user_info.dart';
 import 'package:talkie/screens/user_profile/profile_screen.dart';
 import 'package:talkie/utils/constants/colors.dart';
 import 'package:talkie/utils/constants/images.dart';
@@ -35,7 +33,10 @@ class ChatScreen extends StatelessWidget {
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 10),
-            child: DisplayPic(imageUrl: userModel.profileImage ?? ''),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: DisplayPic(imageUrl: userModel.profileImage ?? ''),
+            ),
           ),
         ),
         actions: [

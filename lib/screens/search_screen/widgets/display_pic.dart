@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:talkie/utils/constants/images.dart';
 
@@ -14,10 +15,25 @@ class DisplayPic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-      backgroundImage: imageUrl != ''
-          ? NetworkImage(imageUrl!)
-          : AssetImage(assetImage),
       radius: radius,
+      child: ClipOval(
+        child: CachedNetworkImage(
+          width: radius * 2,
+          height: radius * 2,
+          fit: BoxFit.cover,
+          imageUrl: imageUrl ?? '',
+          progressIndicatorBuilder: (context, url, downloadProgress) =>
+              CircularProgressIndicator(value: downloadProgress.progress),
+          errorWidget: (context, url, error) {
+            return Image.asset(
+              AssetsImages.boyPic,
+              fit: BoxFit.cover,
+              width: radius * 2,
+              height: radius * 2,
+            );
+          },
+        ),
+      ),
     );
   }
 }

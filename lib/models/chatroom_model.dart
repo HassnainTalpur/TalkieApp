@@ -6,18 +6,19 @@ class ChatRoomModel {
   UserModel? sender;
   UserModel? receiver;
   List<ChatModel>? messages;
+  List<dynamic>? participants;
   int? unReadMessNo;
   String? toUnreadCount;
   String? fromUnreadCount;
   String? lastMessage;
   String? lastMessageTimestamp;
   String? timestamp;
-
   ChatRoomModel({
     this.id,
     this.sender,
     this.receiver,
     this.messages,
+    this.participants,
     this.unReadMessNo,
     this.toUnreadCount,
     this.fromUnreadCount,
@@ -42,6 +43,9 @@ class ChatRoomModel {
     }
     if (json["messages"] is List) {
       messages = json["messages"] ?? [];
+    }
+    if (json["participants"] is List) {
+      participants = json["participants"] ?? [];
     }
     if (json["unReadMessNo"] is int) {
       unReadMessNo = json["unReadMessNo"];
@@ -74,6 +78,9 @@ class ChatRoomModel {
     }
     if (messages != null) {
       _data["messages"] = messages;
+    }
+    if (participants != null) {
+      _data["participants"] = participants;
     }
     _data["unReadMessNo"] = unReadMessNo;
     _data["toUnreadCount"] = toUnreadCount;

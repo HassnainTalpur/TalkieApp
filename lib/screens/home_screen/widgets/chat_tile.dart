@@ -20,7 +20,7 @@ class ChatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 5),
+      margin: EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -29,19 +29,21 @@ class ChatTile extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              DisplayPic(imageUrl: imageUrl, assetImage: AssetsImages.boyPic),
+          Expanded(
+            child: Row(
+              children: [
+                DisplayPic(imageUrl: imageUrl, assetImage: AssetsImages.boyPic),
 
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(contactName, style: TText.bodyLarge),
-                  Text(lastChat, style: TText.labelSmall),
-                ],
-              ),
-            ],
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(contactName, style: TText.bodyLarge),
+                    Text(lastChat, style: TText.labelSmall),
+                  ],
+                ),
+              ],
+            ),
           ),
           Text(delieveryTime, style: TText.labelSmall),
         ],
