@@ -41,8 +41,6 @@ class ProfileController extends GetxController {
 
   @override
   void onClose() {
-    nameController.dispose();
-    aboutController.dispose();
     super.onClose();
     print('Profile Controller was Disposed');
   }

@@ -56,7 +56,7 @@ class ChatList extends StatelessWidget {
 
                   return InkWell(
                     onTap: () {
-                      Get.to(ChatScreen(userModel: otherUser));
+                      Get.to(() => ChatScreen(userModel: otherUser));
                     },
                     child: ChatTile(
                       contactName: otherUser.name ?? '',

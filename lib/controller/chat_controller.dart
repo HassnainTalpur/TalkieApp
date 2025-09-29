@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:talkie/controller/image_controller.dart';
 import 'package:talkie/controller/profile_controller.dart';
 import 'package:talkie/models/chat_model.dart';
 import 'package:talkie/models/chatroom_model.dart';
@@ -11,7 +12,9 @@ class ChatController extends GetxController {
   final auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
   final uuid = Uuid();
+  final RxBool isLoading = false.obs;
 
+  ImageController imageController = Get.put(ImageController());
   ProfileController profileController = Get.put(ProfileController());
   String getRoomId(String targetUserId) {
     String currentUserId = auth.currentUser!.uid;
@@ -28,9 +31,17 @@ class ChatController extends GetxController {
     String name,
     UserModel targetUser,
   ) async {
+    isLoading.value = true;
     final roomId = getRoomId(targetUserId);
     final chatid = uuid.v6();
+    if (imageController.image.value != null) {
+      await imageController.uploadImage(
+        imageController.image,
+        profileController.auth.currentUser!.uid,
+      );
+    }
     var newChat = ChatModel(
+      imageUrl: imageController.uploadedUrl.value,
       id: chatid,
       timestamp: DateTime.now().toString(),
       message: message,
@@ -38,6 +49,7 @@ class ChatController extends GetxController {
       receiverId: targetUserId,
       senderId: auth.currentUser!.uid,
     );
+
     var roomDetails = ChatRoomModel(
       id: roomId,
       participants: [auth.currentUser!.uid, targetUserId],
@@ -57,6 +69,9 @@ class ChatController extends GetxController {
     } catch (e) {
       print(e);
     }
+    isLoading.value = false;
+    imageController.uploadedUrl.value = '';
+    imageController.image.value = null;
   }
 
   Stream<List<ChatModel>> getMessages(String targetUserId) {

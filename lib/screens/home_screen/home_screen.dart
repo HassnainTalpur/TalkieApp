@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:talkie/controller/profile_controller.dart';
 import 'package:talkie/screens/home_screen/widgets/chat_list.dart';
 import 'package:talkie/screens/home_screen/widgets/tab_bar.dart';
 import 'package:talkie/utils/constants/colors.dart';
@@ -17,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
+    final ProfileController profileController = Get.put(ProfileController());
     final TabController tabController = TabController(length: 3, vsync: this);
     return Scaffold(
       floatingActionButton: FloatingActionButton(

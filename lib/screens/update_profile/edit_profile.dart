@@ -24,7 +24,7 @@ class EditProfile extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print(contactController.userList);
+          print(profileController.nameController);
         },
       ),
       appBar: AppBar(

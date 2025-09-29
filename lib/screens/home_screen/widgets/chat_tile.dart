@@ -35,12 +35,14 @@ class ChatTile extends StatelessWidget {
                 DisplayPic(imageUrl: imageUrl, assetImage: AssetsImages.boyPic),
 
                 const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(contactName, style: TText.bodyLarge),
-                    Text(lastChat, style: TText.labelSmall),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(contactName, style: TText.bodyLarge),
+                      Text(lastChat, style: TText.labelSmall, maxLines: 1),
+                    ],
+                  ),
                 ),
               ],
             ),

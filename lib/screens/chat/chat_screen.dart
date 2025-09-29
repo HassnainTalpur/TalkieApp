@@ -1,16 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:talkie/controller/auth_controller.dart';
 import 'package:talkie/controller/chat_controller.dart';
+import 'package:talkie/controller/image_controller.dart';
 import 'package:talkie/controller/profile_controller.dart';
 import 'package:talkie/models/user_model.dart';
 import 'package:talkie/screens/chat/widgets/chat_bubble.dart';
+import 'package:talkie/screens/chat/widgets/type_message.dart';
 import 'package:talkie/screens/search_screen/widgets/display_pic.dart';
 import 'package:talkie/screens/user_profile/profile_screen.dart';
 import 'package:talkie/utils/constants/colors.dart';
-import 'package:talkie/utils/constants/images.dart';
 import 'package:talkie/utils/constants/text.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -19,13 +21,13 @@ class ChatScreen extends StatelessWidget {
   final TextEditingController messageController = TextEditingController();
   final ChatController chatController = Get.put(ChatController());
   final AuthController authController = Get.put(AuthController());
-  final ProfileController profileController = Get.put(
-    ProfileController(),
-    permanent: true,
-  );
+  final ProfileController profileController = Get.put(ProfileController());
+  final ImageController imageController = Get.put(ImageController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         leading: InkWell(
           onTap: () {
@@ -60,69 +62,11 @@ class ChatScreen extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        margin: EdgeInsets.symmetric(horizontal: 5),
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          color: tContainerColor,
-          borderRadius: BorderRadius.circular(100),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 25,
-              height: 25,
-              child: SvgPicture.asset(AssetsImages.chatMicSVG),
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: TextField(
-                controller: messageController,
-                decoration: InputDecoration(
-                  filled: false,
-                  hintText: 'Type message ....',
-                  hintStyle: TText.labelLarge,
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 25,
-              height: 25,
-              child: SvgPicture.asset(AssetsImages.chatGallerySVG),
-            ),
-            SizedBox(width: 10),
-            InkWell(
-              onTap: () {
-                if (messageController.text.isNotEmpty) {
-                  chatController.sendMessages(
-                    userModel.id!,
-                    messageController.text,
-                    profileController.currentUser.value.name!,
-                    userModel,
-                  );
-                  messageController.clear();
-                }
-              },
-              child: Container(
-                width: 25,
-                height: 25,
-                child: SvgPicture.asset(AssetsImages.chatSendSVG),
-              ),
-            ),
-          ],
-        ),
-      ),
       body: Column(
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(
-                bottom: 25,
-                top: 10,
-                left: 10,
-                right: 10,
-              ),
+              padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
               child: StreamBuilder(
                 stream: chatController.getMessages(userModel.id!),
                 builder: (context, snapshot) {
@@ -152,7 +96,7 @@ class ChatScreen extends StatelessWidget {
                                 profileController.currentUser.value.id,
                             message: snapshot.data![index].message!,
                             time: formatTime,
-                            imageUrl: '',
+                            imageUrl: snapshot.data![index].imageUrl!,
                             status: 'status',
                           ),
                         );
@@ -163,7 +107,25 @@ class ChatScreen extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 30),
+
+          Obx(
+            () => imageController.image.value != null
+                ? Container(
+                    height: 500,
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.amber,
+                      image: DecorationImage(
+                        fit: BoxFit.contain,
+                        image: FileImage(
+                          File(imageController.image.value!.path),
+                        ),
+                      ),
+                    ),
+                  )
+                : SizedBox(),
+          ),
+          TypeMessage(userModel: userModel),
         ],
       ),
     );

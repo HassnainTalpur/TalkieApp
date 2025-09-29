@@ -1,11 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:talkie/controller/chat_controller.dart';
 import 'package:talkie/utils/constants/colors.dart';
 import 'package:talkie/utils/constants/images.dart';
 import 'package:talkie/utils/constants/text.dart';
 
 class ChatBubble extends StatelessWidget {
-  const ChatBubble({
+  ChatBubble({
     super.key,
     required this.isComing,
     required this.message,
@@ -19,6 +22,7 @@ class ChatBubble extends StatelessWidget {
   final String imageUrl;
   final String status;
 
+  final ChatController chatController = Get.put(ChatController());
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -30,7 +34,7 @@ class ChatBubble extends StatelessWidget {
         children: [
           Container(
             // margin: EdgeInsets.all(10),
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(5),
             constraints: BoxConstraints(
               maxWidth: MediaQuery.sizeOf(context).width * 0.8,
             ),
@@ -52,10 +56,18 @@ class ChatBubble extends StatelessWidget {
                         ? CrossAxisAlignment.start
                         : CrossAxisAlignment.end,
                     children: [
-                      Image.network(imageUrl),
+                      CachedNetworkImage(
+                        fit: BoxFit.contain,
+                        imageUrl: imageUrl,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
 
-                      SizedBox(height: 10),
-                      Text(message),
+                        errorWidget: (context, url, error) {
+                          return CircularProgressIndicator();
+                        },
+                      ),
+                      SizedBox(height: 15),
+                      message.isNotEmpty ? Text(message) : SizedBox(),
                     ],
                   ),
           ),

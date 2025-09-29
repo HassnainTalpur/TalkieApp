@@ -12,27 +12,36 @@ class DisplayPic extends StatelessWidget {
   final String? imageUrl;
   final String assetImage;
   final double radius;
+
+  bool get isValidUrl => imageUrl != null && imageUrl!.trim().isNotEmpty;
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: radius,
       child: ClipOval(
-        child: CachedNetworkImage(
-          width: radius * 2,
-          height: radius * 2,
-          fit: BoxFit.cover,
-          imageUrl: imageUrl ?? '',
-          progressIndicatorBuilder: (context, url, downloadProgress) =>
-              CircularProgressIndicator(value: downloadProgress.progress),
-          errorWidget: (context, url, error) {
-            return Image.asset(
-              AssetsImages.boyPic,
-              fit: BoxFit.cover,
-              width: radius * 2,
-              height: radius * 2,
-            );
-          },
-        ),
+        child: isValidUrl
+            ? CachedNetworkImage(
+                width: radius * 2,
+                height: radius * 2,
+                fit: BoxFit.cover,
+                imageUrl: imageUrl ?? '',
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    CircularProgressIndicator(value: downloadProgress.progress),
+                errorWidget: (context, url, error) {
+                  return Image.asset(
+                    AssetsImages.boyPic,
+                    fit: BoxFit.cover,
+                    width: radius * 2,
+                    height: radius * 2,
+                  );
+                },
+              )
+            : Image.asset(
+                AssetsImages.boyPic,
+                fit: BoxFit.cover,
+                width: radius * 2,
+                height: radius * 2,
+              ),
       ),
     );
   }
