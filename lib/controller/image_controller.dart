@@ -9,7 +9,8 @@ class ImageController extends GetxController {
   final ImagePicker _picker = ImagePicker();
 
   var isUploading = false.obs;
-  var uploadedUrl = "".obs;
+  var uploadedProfileUrl = "".obs;
+  var uploadedImageUrl = "".obs;
 
   final String cloudName = "dgz8rnf5y"; // from Cloudinary dashboard dgz8rnf5y
   final String uploadPreset =
@@ -27,7 +28,33 @@ class ImageController extends GetxController {
     }
   }
 
-  Future<void> uploadImage(Rx<File?> image, String userId) async {
+  Future<String?> uploadImage(Rx<File?> image, String userId) async {
+    isUploading.value = false;
+    if (image.value == null) return null;
+
+    final String uploadUrl =
+        "https://api.cloudinary.com/v1_1/$cloudName/image/upload";
+
+    try {
+      dio.FormData formData = dio.FormData.fromMap({
+        'file': await dio.MultipartFile.fromFile(image.value!.path),
+        'upload_preset': uploadPreset,
+      });
+
+      dio.Response response = await dio.Dio().post(uploadUrl, data: formData);
+      if (response.statusCode == 200) {
+        uploadedImageUrl.value = response.data["secure_url"];
+
+        return uploadedImageUrl.value;
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Upload failed: $e");
+    } finally {
+      isUploading.value = false;
+    }
+  }
+
+  Future<void> uploadProfileImage(Rx<File?> image, String userId) async {
     if (image.value == null) return;
 
     final String uploadUrl =
@@ -41,10 +68,10 @@ class ImageController extends GetxController {
       dio.Response response = await dio.Dio().post(uploadUrl, data: formData);
 
       if (response.statusCode == 200) {
-        uploadedUrl.value = response.data["secure_url"];
+        uploadedProfileUrl.value = response.data["secure_url"];
 
         await FirebaseFirestore.instance.collection('users').doc(userId).update(
-          {"profileImage": uploadedUrl.value},
+          {"profileImage": uploadedProfileUrl.value},
         );
         Get.snackbar("Success", "Image Uploaded Successfully!");
       }

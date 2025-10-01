@@ -9,6 +9,7 @@ import 'package:talkie/controller/chat_controller.dart';
 import 'package:talkie/controller/image_controller.dart';
 import 'package:talkie/controller/profile_controller.dart';
 import 'package:talkie/models/user_model.dart';
+import 'package:talkie/screens/chat/widgets/image_picker_sheet.dart';
 import 'package:talkie/utils/constants/colors.dart';
 import 'package:talkie/utils/constants/images.dart';
 import 'package:talkie/utils/constants/text.dart';
@@ -62,7 +63,7 @@ class TypeMessage extends StatelessWidget {
                 () => imageController.image.value == null
                     ? InkWell(
                         onTap: () {
-                          imageController.imagePicker(ImageSource.gallery);
+                          ImagePickerSheet(imageController);
                         },
                         child: SizedBox(
                           width: 25,

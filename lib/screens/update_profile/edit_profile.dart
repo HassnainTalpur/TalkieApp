@@ -145,7 +145,7 @@ class EditProfile extends StatelessWidget {
                               () => InkWell(
                                 onTap: () async {
                                   isEditing.value = !isEditing.value;
-                                  await imageController.uploadImage(
+                                  await imageController.uploadProfileImage(
                                     imageController.image,
                                     authController.auth.currentUser!.uid,
                                   );

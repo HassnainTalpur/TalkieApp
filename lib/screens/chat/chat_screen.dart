@@ -114,7 +114,7 @@ class ChatScreen extends StatelessWidget {
                     height: 500,
                     margin: EdgeInsets.only(bottom: 10),
                     decoration: BoxDecoration(
-                      color: Colors.amber,
+                      color: tContainerColor,
                       image: DecorationImage(
                         fit: BoxFit.contain,
                         image: FileImage(

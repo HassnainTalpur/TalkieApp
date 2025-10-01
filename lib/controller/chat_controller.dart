@@ -41,7 +41,7 @@ class ChatController extends GetxController {
       );
     }
     var newChat = ChatModel(
-      imageUrl: imageController.uploadedUrl.value,
+      imageUrl: imageController.uploadedImageUrl.value,
       id: chatid,
       timestamp: DateTime.now().toString(),
       message: message,
@@ -70,7 +70,8 @@ class ChatController extends GetxController {
       print(e);
     }
     isLoading.value = false;
-    imageController.uploadedUrl.value = '';
+    imageController.uploadedImageUrl.value = '';
+    imageController.uploadedProfileUrl.value = '';
     imageController.image.value = null;
   }
 
