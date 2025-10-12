@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:talkie/screens/auth/widgets/auth_body.dart';
-import 'package:talkie/utils/widgets/welcome_heading.dart';
+
+import '../../utils/widgets/welcome_heading.dart';
+import 'widgets/auth_body.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => const Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(20.0),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -24,5 +24,4 @@ class AuthScreen extends StatelessWidget {
         ),
       ),
     );
-  }
 }

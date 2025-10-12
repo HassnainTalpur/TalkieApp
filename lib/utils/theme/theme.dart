@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:talkie/utils/constants/colors.dart';
-import 'package:talkie/utils/constants/text.dart';
+import '../constants/colors.dart';
+import '../constants/text.dart';
 
 var lightTheme = ThemeData();
 final darkTheme = ThemeData(
   brightness: Brightness.dark,
   useMaterial3: true,
-  appBarTheme: AppBarTheme(backgroundColor: tContainerColor),
+  appBarTheme: const AppBarTheme(backgroundColor: tContainerColor),
   inputDecorationTheme: InputDecorationTheme(
     fillColor: tBackgroundColor,
     filled: true,
@@ -19,52 +19,51 @@ final darkTheme = ThemeData(
     primary: tPrimaryColor,
     onPrimary: tOnBackgroundColor,
     surface: tBackgroundColor,
-    onSurface: tOnBackgroundColor,
     primaryContainer: tContainerColor,
     onPrimaryContainer: tonContainerColor,
   ),
   textTheme: TextTheme(
-    headlineLarge: TextStyle(
+    headlineLarge: const TextStyle(
       fontSize: 32,
       color: tPrimaryColor,
-      fontFamily: "Poppins",
+      fontFamily: 'Poppins',
       fontWeight: FontWeight.w800,
     ),
-    headlineMedium: TextStyle(
+    headlineMedium: const TextStyle(
       fontSize: 30,
       color: tOnBackgroundColor,
-      fontFamily: "Poppins",
+      fontFamily: 'Poppins',
       fontWeight: FontWeight.w600,
     ),
     headlineSmall: TText.headlineSmall.copyWith(color: tPrimaryColor),
-    bodyLarge: TextStyle(
+    bodyLarge: const TextStyle(
       fontSize: 18,
       color: tOnBackgroundColor,
-      fontFamily: "Poppins",
+      fontFamily: 'Poppins',
       fontWeight: FontWeight.w500,
     ),
-    bodyMedium: TextStyle(
+    bodyMedium: const TextStyle(
       fontSize: 15,
       color: tOnBackgroundColor,
-      fontFamily: "Poppins",
+      fontFamily: 'Poppins',
       fontWeight: FontWeight.w500,
     ),
-    labelLarge: TextStyle(
+    labelLarge: const TextStyle(
       fontSize: 15,
       color: tonContainerColor,
-      fontFamily: "Poppins",
+      fontFamily: 'Poppins',
       fontWeight: FontWeight.w400,
     ),
-    labelMedium: TextStyle(
+    labelMedium: const TextStyle(
       fontSize: 12,
       color: tonContainerColor,
-      fontFamily: "Poppins",
+      fontFamily: 'Poppins',
       fontWeight: FontWeight.w400,
     ),
-    labelSmall: TextStyle(
+    labelSmall: const TextStyle(
       fontSize: 10,
       color: tonContainerColor,
-      fontFamily: "Poppins",
+      fontFamily: 'Poppins',
       fontWeight: FontWeight.w300,
     ),
   ),

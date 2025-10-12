@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:talkie/models/user_model.dart';
+import '../models/user_model.dart';
 
 class ProfileController extends GetxController {
   final auth = FirebaseAuth.instance;
@@ -20,6 +20,9 @@ class ProfileController extends GetxController {
   }
 
   Future<void> getUserDetails() async {
+    if (auth.currentUser == null) {
+      return;
+    }
     await db
         .collection('users')
         .doc(auth.currentUser!.uid)

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:talkie/controller/image_controller.dart';
-import 'package:talkie/utils/constants/colors.dart';
+import '../../../controller/image_controller.dart';
+import '../../../utils/constants/colors.dart';
 
 Future<void> ImagePickerSheet(ImageController imageController) async {
   await Get.bottomSheet(
     Container(
       height: 150,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: tContainerColor,
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(20),
@@ -31,7 +31,7 @@ Future<void> ImagePickerSheet(ImageController imageController) async {
                 imageController.imagePicker(ImageSource.camera);
                 Get.back();
               },
-              icon: Icon(Icons.camera, size: 30),
+              icon: const Icon(Icons.camera, size: 30),
             ),
           ),
           Container(
@@ -46,7 +46,7 @@ Future<void> ImagePickerSheet(ImageController imageController) async {
                 imageController.imagePicker(ImageSource.gallery);
                 Get.back();
               },
-              icon: Icon(Icons.photo, size: 30),
+              icon: const Icon(Icons.photo, size: 30),
             ),
           ),
           Container(
@@ -60,7 +60,7 @@ Future<void> ImagePickerSheet(ImageController imageController) async {
               onPressed: () {
                 Get.back();
               },
-              icon: Icon(Icons.video_camera_back, size: 30),
+              icon: const Icon(Icons.video_camera_back, size: 30),
             ),
           ),
         ],

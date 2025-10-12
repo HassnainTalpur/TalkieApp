@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:talkie/controller/auth_controller.dart';
-import 'package:talkie/models/user_model.dart';
-import 'package:talkie/screens/update_profile/widgets/user_info.dart';
+import '../../controller/auth_controller.dart';
+import '../../models/user_model.dart';
+import '../update_profile/widgets/user_info.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key, required this.userModel});
+  const ProfileScreen({required this.userModel, super.key});
   final UserModel userModel;
 
   @override
@@ -15,9 +15,9 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {},
-          icon: Icon(Icons.arrow_back_ios_new_rounded),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
-        title: Text('Back'),
+        title: const Text('Back'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -28,12 +28,12 @@ class ProfileScreen extends StatelessWidget {
               name: userModel.name ?? '',
               imageUrl: userModel.profileImage ?? '',
             ),
-            Spacer(),
+            const Spacer(),
             ElevatedButton(
               onPressed: () {
                 authController.logOut();
               },
-              child: Text('Log Out'),
+              child: const Text('Log Out'),
             ),
           ],
         ),

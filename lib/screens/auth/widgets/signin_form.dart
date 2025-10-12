@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:talkie/controller/auth_controller.dart';
-import 'package:talkie/utils/constants/colors.dart';
-import 'package:talkie/utils/constants/text.dart';
-import 'package:talkie/utils/widgets/primary_button.dart';
+import '../../../controller/auth_controller.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/text.dart';
+import '../../../utils/widgets/primary_button.dart';
 
 class SigninForm extends StatelessWidget {
   const SigninForm({super.key});
@@ -16,48 +17,50 @@ class SigninForm extends StatelessWidget {
     final AuthController authController = AuthController();
     return Column(
       children: [
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextField(
           controller: nameController,
           keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Full Name',
             hintStyle: TText.labelLarge,
             prefixIcon: Icon(Icons.contacts_sharp, color: tonContainerColor),
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextField(
           controller: emailController,
           keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Email',
             hintStyle: TText.labelLarge,
             prefixIcon: Icon(Icons.alternate_email, color: tonContainerColor),
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextField(
           controller: passwordController,
           obscureText: true,
           keyboardType: TextInputType.visiblePassword,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Password',
             hintStyle: TText.labelLarge,
             prefixIcon: Icon(Icons.password, color: tonContainerColor),
           ),
         ),
-        SizedBox(height: 50),
+        const SizedBox(height: 50),
         InkWell(
-          onTap: () {
-            authController.signUp(
+          onTap: () async {
+            await authController.signUp(
               emailController.text,
               passwordController.text,
               nameController.text,
             );
-            Get.offAllNamed('/home');
+            if (FirebaseAuth.instance.currentUser != null) {
+              Get.offAllNamed('/home');
+            }
           },
-          child: PrimaryButton(
+          child: const PrimaryButton(
             buttonIcon: Icons.lock_open_rounded,
             buttonText: 'SIGN IN',
           ),

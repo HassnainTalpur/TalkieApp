@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:talkie/controller/profile_controller.dart';
-import 'package:talkie/screens/home_screen/widgets/chat_list.dart';
-import 'package:talkie/screens/home_screen/widgets/tab_bar.dart';
-import 'package:talkie/utils/constants/colors.dart';
-import 'package:talkie/utils/constants/images.dart';
-import 'package:talkie/utils/constants/text.dart';
+
+import '../../utils/constants/colors.dart';
+import '../../utils/constants/images.dart';
+import '../../utils/constants/text.dart';
+import 'widgets/chat_list.dart';
+import 'widgets/group_list.dart';
+import 'widgets/tab_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    final ProfileController profileController = Get.put(ProfileController());
     final TabController tabController = TabController(length: 3, vsync: this);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           Get.offAllNamed('/search');
         },
         backgroundColor: tPrimaryColor,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       appBar: AppBar(
         leading: Padding(
@@ -34,15 +34,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: SvgPicture.asset(AssetsImages.appIconSVG),
         ),
         leadingWidth: MediaQuery.of(context).size.width * 0.1,
-        title: Text('Talkie'),
+        title: const Text('Talkie'),
         titleTextStyle: TText.headlineSmall.copyWith(color: Colors.white),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
           IconButton(
             onPressed: () {
               Get.offAllNamed('/editprofile');
             },
-            icon: Icon(Icons.more_vert_outlined),
+            icon: const Icon(Icons.more_vert_outlined),
           ),
         ],
         bottom: MyTabBar(tabController: tabController),
@@ -53,8 +53,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           controller: tabController,
           children: [
             ChatList(), // Tab 1
-            Center(child: Text("Status")), // Tab 2 placeholder
-            Center(child: Text("Calls")), // Tab 3 placeholder
+            GroupList(), // Tab 2 placeholder
+            const Center(child: Text('Calls')), // Tab 3 placeholder
           ],
         ),
       ),

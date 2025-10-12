@@ -3,20 +3,21 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:talkie/controller/auth_controller.dart';
-import 'package:talkie/controller/chat_controller.dart';
-import 'package:talkie/controller/image_controller.dart';
-import 'package:talkie/controller/profile_controller.dart';
-import 'package:talkie/models/user_model.dart';
-import 'package:talkie/screens/chat/widgets/chat_bubble.dart';
-import 'package:talkie/screens/chat/widgets/type_message.dart';
-import 'package:talkie/screens/search_screen/widgets/display_pic.dart';
-import 'package:talkie/screens/user_profile/profile_screen.dart';
-import 'package:talkie/utils/constants/colors.dart';
-import 'package:talkie/utils/constants/text.dart';
+
+import '../../controller/auth_controller.dart';
+import '../../controller/chat_controller.dart';
+import '../../controller/image_controller.dart';
+import '../../controller/profile_controller.dart';
+import '../../models/user_model.dart';
+import '../../utils/constants/colors.dart';
+import '../../utils/constants/text.dart';
+import '../search_screen/widgets/display_pic.dart';
+import '../user_profile/profile_screen.dart';
+import 'widgets/chat_bubble.dart';
+import 'widgets/type_message.dart';
 
 class ChatScreen extends StatelessWidget {
-  ChatScreen({super.key, required this.userModel});
+  ChatScreen({required this.userModel, super.key});
   final UserModel userModel;
   final TextEditingController messageController = TextEditingController();
   final ChatController chatController = Get.put(ChatController());
@@ -25,8 +26,7 @@ class ChatScreen extends StatelessWidget {
   final ImageController imageController = Get.put(ImageController());
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         leading: InkWell(
@@ -42,8 +42,8 @@ class ChatScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.call)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.video_call)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.call)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.video_call)),
         ],
         title: InkWell(
           onTap: () {
@@ -55,7 +55,7 @@ class ChatScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(userModel.name ?? '', style: TText.bodyLarge),
-                  Text('online', style: TText.labelMedium),
+                  const Text('online', style: TText.labelMedium),
                 ],
               ),
             ],
@@ -71,10 +71,10 @@ class ChatScreen extends StatelessWidget {
                 stream: chatController.getMessages(userModel.id!),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No Message Yet!'));
+                    return const Center(child: Text('No Message Yet!'));
                   }
                   if (snapshot.hasError) {
                     return Center(child: Text(snapshot.error.toString()));
@@ -83,10 +83,10 @@ class ChatScreen extends StatelessWidget {
                       reverse: true,
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
-                        DateTime timestamp = DateTime.parse(
+                        final DateTime timestamp = DateTime.parse(
                           snapshot.data![index].timestamp!,
                         );
-                        String formatTime = DateFormat(
+                        final String formatTime = DateFormat(
                           'hh:mm',
                         ).format(timestamp);
                         return Obx(
@@ -112,7 +112,7 @@ class ChatScreen extends StatelessWidget {
             () => imageController.image.value != null
                 ? Container(
                     height: 500,
-                    margin: EdgeInsets.only(bottom: 10),
+                    margin: const EdgeInsets.only(bottom: 10),
                     decoration: BoxDecoration(
                       color: tContainerColor,
                       image: DecorationImage(
@@ -123,11 +123,10 @@ class ChatScreen extends StatelessWidget {
                       ),
                     ),
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ),
           TypeMessage(userModel: userModel),
         ],
       ),
     );
-  }
 }

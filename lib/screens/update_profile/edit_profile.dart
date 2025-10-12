@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:talkie/controller/auth_controller.dart';
-import 'package:talkie/controller/contact_controller.dart';
-import 'package:talkie/controller/image_controller.dart';
-import 'package:talkie/controller/profile_controller.dart';
-import 'package:talkie/utils/constants/colors.dart';
-import 'package:talkie/utils/constants/images.dart';
-import 'package:talkie/utils/widgets/primary_button.dart';
+import '../../controller/auth_controller.dart';
+import '../../controller/contact_controller.dart';
+import '../../controller/image_controller.dart';
+import '../../controller/profile_controller.dart';
+import '../../utils/constants/colors.dart';
+import '../../utils/constants/images.dart';
+import '../../utils/widgets/primary_button.dart';
 
 class EditProfile extends StatelessWidget {
   const EditProfile({super.key});
 
   @override
   Widget build(BuildContext context) {
-    AuthController authController = AuthController();
+    final AuthController authController = AuthController();
 
     final ImageController imageController = Get.put(ImageController());
-    ProfileController profileController = Get.put(ProfileController());
-    ContactController contactController = Get.put(ContactController());
-    RxBool isEditing = false.obs;
+    final ProfileController profileController = Get.put(ProfileController());
+    final ContactController contactController = Get.put(ContactController());
+    final RxBool isEditing = false.obs;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -28,9 +28,9 @@ class EditProfile extends StatelessWidget {
         },
       ),
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             Get.offAllNamed('/home');
           },
@@ -41,7 +41,7 @@ class EditProfile extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Container(
+              child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: tContainerColor,
                   borderRadius: BorderRadius.circular(20),
@@ -91,7 +91,7 @@ class EditProfile extends StatelessWidget {
                                                     .value
                                                     .profileImage!,
                                               )
-                                            : AssetImage(
+                                            : const AssetImage(
                                                 AssetsImages.appIconSVG,
                                               ),
                                         backgroundColor: tBackgroundColor,
@@ -100,33 +100,33 @@ class EditProfile extends StatelessWidget {
                               ),
                             ),
 
-                            Obx(() {
-                              return TextFormField(
+                            Obx(
+                              () => TextFormField(
                                 controller: profileController.nameController,
                                 decoration: InputDecoration(
                                   filled: isEditing.value,
                                   enabled: isEditing.value,
                                   labelText: 'Name',
-                                  prefixIcon: Icon(
+                                  prefixIcon: const Icon(
                                     Icons.precision_manufacturing_outlined,
                                   ),
                                 ),
-                              );
-                            }),
-                            SizedBox(height: 10),
-                            Obx(() {
-                              return TextFormField(
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Obx(
+                              () => TextFormField(
                                 controller: profileController.aboutController,
                                 decoration: InputDecoration(
                                   filled: isEditing.value,
                                   enabled: isEditing.value,
                                   labelText: 'About',
-                                  prefixIcon: Icon(Icons.adobe_outlined),
+                                  prefixIcon: const Icon(Icons.adobe_outlined),
                                 ),
-                              );
-                            }),
+                              ),
+                            ),
 
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Obx(
                               () => TextField(
                                 decoration: InputDecoration(
@@ -135,12 +135,14 @@ class EditProfile extends StatelessWidget {
                                   labelText:
                                       profileController.currentUser.value.email,
                                   hintText: 'Email',
-                                  prefixIcon: Icon(Icons.woo_commerce_outlined),
+                                  prefixIcon: const Icon(
+                                    Icons.woo_commerce_outlined,
+                                  ),
                                 ),
                               ),
                             ),
 
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Obx(
                               () => InkWell(
                                 onTap: () async {
@@ -161,9 +163,9 @@ class EditProfile extends StatelessWidget {
                                     );
 
                                     await profileController.getUserDetails();
-                                    print("!!!!!!!!!!!!!!!!! NAME CONTROLLER ");
+                                    print('!!!!!!!!!!!!!!!!! NAME CONTROLLER ');
                                     print(newAbout);
-                                    print("!!!!!!!!!!!!!!!!! NAME CONTROLLER ");
+                                    print('!!!!!!!!!!!!!!!!! NAME CONTROLLER ');
                                     print(
                                       profileController
                                           .currentUser
@@ -173,11 +175,11 @@ class EditProfile extends StatelessWidget {
                                   }
                                 },
                                 child: isEditing.value
-                                    ? PrimaryButton(
+                                    ? const PrimaryButton(
                                         buttonIcon: Icons.edit,
                                         buttonText: 'Save',
                                       )
-                                    : PrimaryButton(
+                                    : const PrimaryButton(
                                         buttonIcon: Icons.save,
                                         buttonText: 'Edit',
                                       ),
@@ -195,7 +197,7 @@ class EditProfile extends StatelessWidget {
               onPressed: () {
                 authController.logOut();
               },
-              child: Text('Log Out'),
+              child: const Text('Log Out'),
             ),
           ],
         ),

@@ -24,30 +24,30 @@ class UserModel {
   });
 
   UserModel.fromJson(Map<String, dynamic> json) {
-    id = json["id"];
-    name = json["name"];
-    email = json["email"];
-    profileImage = json["profileImage"];
-    phoneNumber = json["phoneNumber"];
-    about = json["about"];
-    createdAt = json["createdAt"];
-    lastOnlineStatus = json["lastOnlineStatus"];
-    status = json["status"];
-    role = json["role"];
+    id = json['id'];
+    name = json['name'];
+    email = json['email'];
+    profileImage = json['profileImage'];
+    phoneNumber = json['phoneNumber'];
+    about = json['about'];
+    createdAt = json['createdAt'];
+    lastOnlineStatus = json['lastOnlineStatus'];
+    status = json['status'];
+    role = json['role'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["id"] = id;
-    _data["name"] = name;
-    _data["email"] = email;
-    _data["profileImage"] = profileImage;
-    _data["phoneNumber"] = phoneNumber;
-    _data["about"] = about;
-    _data["createdAt"] = createdAt;
-    _data["lastOnlineStatus"] = lastOnlineStatus;
-    _data["status"] = status;
-    _data["role"] = role;
-    return _data;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['email'] = email;
+    data['profileImage'] = profileImage;
+    data['phoneNumber'] = phoneNumber;
+    data['about'] = about;
+    data['createdAt'] = createdAt;
+    data['lastOnlineStatus'] = lastOnlineStatus;
+    data['status'] = status;
+    data['role'] = role;
+    return data;
   }
 }

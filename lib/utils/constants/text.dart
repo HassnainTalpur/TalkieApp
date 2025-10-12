@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:talkie/utils/constants/colors.dart';
+import 'colors.dart';
 
 class TText {
   TText._();
@@ -7,56 +7,56 @@ class TText {
   static const TextStyle headlineLarge = TextStyle(
     fontSize: 32,
     color: tPrimaryColor,
-    fontFamily: "Poppins",
+    fontFamily: 'Poppins',
     fontWeight: FontWeight.w800,
   );
 
-  static TextStyle headlineMedium = TextStyle(
+  static TextStyle headlineMedium = const TextStyle(
     fontSize: 30,
     color: tOnBackgroundColor,
-    fontFamily: "Poppins",
+    fontFamily: 'Poppins',
     fontWeight: FontWeight.w600,
   );
 
   static const TextStyle headlineSmall = TextStyle(
     fontSize: 20,
     color: tOnBackgroundColor,
-    fontFamily: "Poppins",
+    fontFamily: 'Poppins',
     fontWeight: FontWeight.w800,
   );
 
-  static final TextStyle bodyLarge = TextStyle(
+  static const TextStyle bodyLarge = TextStyle(
     fontSize: 18,
     color: tOnBackgroundColor,
-    fontFamily: "Poppins",
+    fontFamily: 'Poppins',
     fontWeight: FontWeight.w500,
   );
 
-  static final TextStyle bodyMedium = TextStyle(
+  static const TextStyle bodyMedium = TextStyle(
     fontSize: 15,
     color: tOnBackgroundColor,
-    fontFamily: "Poppins",
+    fontFamily: 'Poppins',
     fontWeight: FontWeight.w500,
   );
 
-  static final TextStyle labelLarge = TextStyle(
+  static const TextStyle labelLarge = TextStyle(
     fontSize: 15,
     color: tonContainerColor,
-    fontFamily: "Poppins",
+    fontFamily: 'Poppins',
     fontWeight: FontWeight.w400,
   );
 
-  static final TextStyle labelMedium = TextStyle(
+  static const TextStyle labelMedium = TextStyle(
     fontSize: 12,
     color: tonContainerColor,
-    fontFamily: "Poppins",
+    fontFamily: 'Poppins',
     fontWeight: FontWeight.w400,
   );
 
-  static final TextStyle labelSmall = TextStyle(
+  static const TextStyle labelSmall = TextStyle(
     fontSize: 10,
     color: tonContainerColor,
-    fontFamily: "Poppins",
+    fontFamily: 'Poppins',
     fontWeight: FontWeight.w300,
   );
 }

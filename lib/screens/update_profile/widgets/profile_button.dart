@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:talkie/utils/constants/colors.dart';
+import '../../../utils/constants/colors.dart';
 
 class ProfileButton extends StatelessWidget {
   const ProfileButton({
-    super.key,
-    required this.buttonText,
-    required this.buttonIcon,
+    required this.buttonText, required this.buttonIcon, super.key,
     this.color = Colors.blue,
   });
   final Color color;
@@ -14,9 +12,8 @@ class ProfileButton extends StatelessWidget {
   final String buttonIcon;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
+  Widget build(BuildContext context) => Container(
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: tBackgroundColor,
@@ -29,10 +26,9 @@ class ProfileButton extends StatelessWidget {
             buttonIcon,
             colorFilter: ColorFilter.mode(color, BlendMode.modulate),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Text(buttonText, style: TextStyle(color: color)),
         ],
       ),
     );
-  }
 }

@@ -7,8 +7,8 @@ import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/images.dart';
 import '../../../utils/constants/text.dart';
 
-class ChatBubble extends StatelessWidget {
-  ChatBubble({
+class GroupChatBubble extends StatelessWidget {
+  GroupChatBubble({
     required this.isComing, required this.message, required this.time, required this.imageUrl, required this.status, super.key,
   });
   final bool isComing;
@@ -35,12 +35,12 @@ class ChatBubble extends StatelessWidget {
             decoration: BoxDecoration(
               color: tContainerColor,
               borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(20),
+                bottomLeft: const Radius.circular(20),
                 topRight: const Radius.circular(20),
                 bottomRight: isComing
                     ? const Radius.circular(20)
                     : const Radius.circular(0),
-                bottomLeft: isComing ? const Radius.circular(0) : const Radius.circular(20),
+                topLeft: isComing ? const Radius.circular(0) : const Radius.circular(20),
               ),
             ),
             child: imageUrl == ''

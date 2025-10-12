@@ -1,47 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:talkie/controller/chat_controller.dart';
-import 'package:talkie/models/chatroom_model.dart';
-import 'package:talkie/screens/chat/chat_screen.dart';
-import 'package:talkie/screens/home_screen/widgets/chat_tile.dart';
+import '../../../controller/chat_controller.dart';
+import '../../../models/chatroom_model.dart';
+import '../../chat/chat_screen.dart';
+import 'chat_tile.dart';
 
 class ChatList extends StatelessWidget {
   ChatList({super.key});
   final ChatController chatController = Get.put(ChatController());
   @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<List<ChatRoomModel>>(
+  Widget build(BuildContext context) => StreamBuilder<List<ChatRoomModel>>(
       stream: chatController.chatRooms(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
         print(
-          "🔥 snapshot: ${snapshot.connectionState}, hasData: ${snapshot.hasData}, error: ${snapshot.error}",
+          '🔥 snapshot: ${snapshot.connectionState}, hasData: ${snapshot.hasData}, error: ${snapshot.error}',
         );
         if (!snapshot.hasData) {
-          print("⚠️ snapshot.hasData = false");
+          print('⚠️ snapshot.hasData = false');
           return const Center(child: Text('No Chats Yet'));
         }
 
         final chatRooms = snapshot.data!;
         if (chatRooms.isEmpty) {
-          print("⚠️ chatRooms is empty");
+          print('⚠️ chatRooms is empty');
           return const Center(child: Text('No Chats Yet'));
         }
 
-        print("✅ Showing ${chatRooms.length} chat rooms in UI");
+        print('✅ Showing ${chatRooms.length} chat rooms in UI');
 
         return RefreshIndicator(
           child: ListView.builder(
             itemCount: chatRooms.length,
             itemBuilder: (context, index) {
               final chatRoom = chatRooms[index];
-              DateTime timestamp = DateTime.parse(
+              final DateTime timestamp = DateTime.parse(
                 chatRoom.lastMessageTimestamp!,
               );
-              String formatTime = DateFormat('hh:mm').format(timestamp);
+              final String formatTime = DateFormat('hh:mm').format(timestamp);
+
               final currentUserId = chatController.auth.currentUser!.uid;
               final targetUserId = chatRoom.participants!.firstWhere(
                 (id) => id != currentUserId,
@@ -75,5 +75,4 @@ class ChatList extends StatelessWidget {
         );
       },
     );
-  }
 }

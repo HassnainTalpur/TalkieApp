@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:talkie/controller/auth_controller.dart';
-import 'package:talkie/utils/constants/colors.dart';
-import 'package:talkie/utils/constants/text.dart';
-import 'package:talkie/utils/widgets/primary_button.dart';
+import '../../../controller/auth_controller.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/text.dart';
+import '../../../utils/widgets/primary_button.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({super.key});
@@ -15,30 +15,30 @@ class LoginForm extends StatelessWidget {
     final AuthController authController = Get.put(AuthController());
     return Column(
       children: [
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextField(
           controller: emailController,
           keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Email',
             hintStyle: TText.labelLarge,
             prefixIcon: Icon(Icons.alternate_email, color: tonContainerColor),
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextField(
           controller: passwordController,
           obscureText: true,
           keyboardType: TextInputType.visiblePassword,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Password',
             hintStyle: TText.labelLarge,
             prefixIcon: Icon(Icons.password, color: tonContainerColor),
           ),
         ),
-        SizedBox(height: 50),
+        const SizedBox(height: 50),
         authController.isLoading.value
-            ? CircularProgressIndicator()
+            ? const CircularProgressIndicator()
             : InkWell(
                 onTap: () {
                   authController.logIn(
@@ -46,7 +46,7 @@ class LoginForm extends StatelessWidget {
                     passwordController.text,
                   );
                 },
-                child: PrimaryButton(
+                child: const PrimaryButton(
                   buttonIcon: Icons.lock_outlined,
                   buttonText: 'LOGIN',
                 ),

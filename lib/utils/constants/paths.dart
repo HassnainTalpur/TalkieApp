@@ -1,37 +1,35 @@
 import 'package:get/get.dart';
-import 'package:talkie/screens/auth/auth_screen.dart';
-import 'package:talkie/screens/chat/chat_screen.dart';
-import 'package:talkie/screens/home_screen/home_screen.dart';
-import 'package:talkie/screens/search_screen/search_screen.dart';
-import 'package:talkie/screens/update_profile/edit_profile.dart';
-import 'package:talkie/screens/user_profile/profile_screen.dart';
-import 'package:talkie/screens/update_profile/update_profile.dart';
+import '../../screens/auth/auth_screen.dart';
+import '../../screens/home_screen/home_screen.dart';
+import '../../screens/search_screen/search_screen.dart';
+import '../../screens/update_profile/edit_profile.dart';
+import '../../screens/update_profile/update_profile.dart';
 
 var pagePath = [
   GetPage(
     name: '/auth',
-    page: () => AuthScreen(),
+    page: () => const AuthScreen(),
     transition: Transition.rightToLeft,
   ),
   GetPage(
     name: '/home',
-    page: () => HomeScreen(),
+    page: () => const HomeScreen(),
     transition: Transition.rightToLeft,
   ),
 
   GetPage(
     name: '/updateprofile',
-    page: () => UpdateProfile(),
+    page: () => UpdateGroup(),
     transition: Transition.rightToLeft,
   ),
   GetPage(
     name: '/editprofile',
-    page: () => EditProfile(),
+    page: () => const EditProfile(),
     transition: Transition.rightToLeft,
   ),
   GetPage(
     name: '/search',
-    page: () => SearchScreen(),
+    page: () => const SearchScreen(),
     transition: Transition.leftToRight,
   ),
 ];

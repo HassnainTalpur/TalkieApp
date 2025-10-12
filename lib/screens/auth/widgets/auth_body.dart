@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
-import 'package:talkie/screens/auth/widgets/login_form.dart';
-import 'package:talkie/screens/auth/widgets/signin_form.dart';
 
-import 'package:talkie/utils/constants/colors.dart';
-import 'package:talkie/utils/constants/text.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/text.dart';
+import 'login_form.dart';
+import 'signin_form.dart';
 
 class AuthBody extends StatelessWidget {
   const AuthBody({super.key});
 
   @override
   Widget build(BuildContext context) {
-    RxBool isLogin = true.obs;
+    final RxBool isLogin = true.obs;
 
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: tContainerColor,
         borderRadius: BorderRadius.circular(20),
@@ -42,7 +42,7 @@ class AuthBody extends StatelessWidget {
                                     : TText.labelSmall,
                               ),
                               AnimatedContainer(
-                                duration: Duration(milliseconds: 300),
+                                duration: const Duration(milliseconds: 300),
                                 width: isLogin.value ? 100 : 0,
                                 height: 3,
                                 color: tPrimaryColor,
@@ -66,7 +66,7 @@ class AuthBody extends StatelessWidget {
                                     : TText.bodyLarge,
                               ),
                               AnimatedContainer(
-                                duration: Duration(milliseconds: 300),
+                                duration: const Duration(milliseconds: 300),
                                 width: isLogin.value ? 0 : 100,
                                 height: 3,
                                 color: tPrimaryColor,
@@ -78,7 +78,7 @@ class AuthBody extends StatelessWidget {
                     ],
                   ),
                 ),
-                Obx(() => isLogin.value ? LoginForm() : SigninForm()),
+                Obx(() => isLogin.value ? const LoginForm() : const SigninForm()),
               ],
             ),
           ),

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:talkie/models/user_model.dart';
+import '../models/user_model.dart';
 
 class AuthController extends GetxController {
   RxBool isLoading = false.obs;
@@ -12,7 +12,7 @@ class AuthController extends GetxController {
     isLoading = true.obs;
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
-      Get.offAllNamed('/home');
+      await Get.offAllNamed('/home');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -20,7 +20,7 @@ class AuthController extends GetxController {
         print('Wrong password provided for that user.');
       }
     } catch (e) {
-      print("AUTH CONTROLLER EXCEPTION  LOGIN !!!!!!!!!!!!! ${e}");
+      print('AUTH CONTROLLER EXCEPTION  LOGIN !!!!!!!!!!!!! $e');
     }
     isLoading = false.obs;
   }
@@ -35,12 +35,15 @@ class AuthController extends GetxController {
       await inIt(email, name);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        Get.snackbar('weak-password', 'The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        Get.snackbar(
+          'email-already-in-use',
+          'The account already exists for that email.',
+        );
       }
     } catch (e) {
-      print("AUTH CONTROLLER EXCEPTION SIGN UP !!!!!!!!!!!!! ${e}");
+      print('AUTH CONTROLLER EXCEPTION SIGN UP !!!!!!!!!!!!! $e');
     }
   }
 
@@ -51,7 +54,7 @@ class AuthController extends GetxController {
 
   Future<void> inIt(String email, String name) async {
     try {
-      var newUser = UserModel(
+      final newUser = UserModel(
         email: email,
         name: name,
         id: auth.currentUser!.uid,
@@ -62,7 +65,7 @@ class AuthController extends GetxController {
           .doc(auth.currentUser!.uid)
           .set(newUser.toJson());
     } catch (e) {
-      print("AUTH CONTROLLER EXCEPTION INIT !!!!!!!!!!!!! ${e}");
+      print('AUTH CONTROLLER EXCEPTION INIT !!!!!!!!!!!!! $e');
     }
   }
 }

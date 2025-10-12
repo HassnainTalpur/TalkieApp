@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:talkie/controller/image_controller.dart';
-import 'package:talkie/controller/profile_controller.dart';
-import 'package:talkie/models/chat_model.dart';
-import 'package:talkie/models/chatroom_model.dart';
-import 'package:talkie/models/user_model.dart';
 import 'package:uuid/uuid.dart';
+
+import '../models/chat_model.dart';
+import '../models/chatroom_model.dart';
+import '../models/user_model.dart';
+import 'image_controller.dart';
+import 'profile_controller.dart';
 
 class ChatController extends GetxController {
   final auth = FirebaseAuth.instance;
@@ -17,7 +18,7 @@ class ChatController extends GetxController {
   ImageController imageController = Get.put(ImageController());
   ProfileController profileController = Get.put(ProfileController());
   String getRoomId(String targetUserId) {
-    String currentUserId = auth.currentUser!.uid;
+    final String currentUserId = auth.currentUser!.uid;
     if (currentUserId.compareTo(targetUserId) > 0) {
       return currentUserId + targetUserId;
     } else {
@@ -40,7 +41,7 @@ class ChatController extends GetxController {
         profileController.auth.currentUser!.uid,
       );
     }
-    var newChat = ChatModel(
+    final newChat = ChatModel(
       imageUrl: imageController.uploadedImageUrl.value,
       id: chatid,
       timestamp: DateTime.now().toString(),
@@ -50,7 +51,7 @@ class ChatController extends GetxController {
       senderId: auth.currentUser!.uid,
     );
 
-    var roomDetails = ChatRoomModel(
+    final roomDetails = ChatRoomModel(
       id: roomId,
       participants: [auth.currentUser!.uid, targetUserId],
       sender: targetUser,
@@ -76,12 +77,12 @@ class ChatController extends GetxController {
   }
 
   Stream<List<ChatModel>> getMessages(String targetUserId) {
-    String roomId = getRoomId(targetUserId);
+    final String roomId = getRoomId(targetUserId);
     return db
         .collection('chats')
         .doc(roomId)
         .collection('messages')
-        .orderBy("timestamp", descending: true)
+        .orderBy('timestamp', descending: true)
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
@@ -91,17 +92,20 @@ class ChatController extends GetxController {
   }
 
   Stream<List<ChatRoomModel>> chatRooms() {
+    if (auth.currentUser == null) {
+      return const Stream.empty();
+    }
     return db
         .collection('chats')
         .where('participants', arrayContains: auth.currentUser!.uid)
         .orderBy('lastMessageTimestamp', descending: true)
         .snapshots()
-        .map((snapshot) {
-          return snapshot.docs.map((doc) {
+        .map(
+          (snapshot) => snapshot.docs.map((doc) {
             final data = doc.data();
             return ChatRoomModel.fromJson(data);
-          }).toList();
-        });
+          }).toList(),
+        );
   }
 
   Future<void> refreshChatRooms() async {
@@ -113,11 +117,9 @@ class ChatController extends GetxController {
     update();
   }
 
-  Stream<UserModel> getUserStream(String uid) {
-    return db
-        .collection('users')
-        .doc(uid)
-        .snapshots()
-        .map((snapshot) => UserModel.fromJson(snapshot.data()!));
-  }
+  Stream<UserModel> getUserStream(String uid) => db
+      .collection('users')
+      .doc(uid)
+      .snapshots()
+      .map((snapshot) => UserModel.fromJson(snapshot.data()!));
 }

@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:talkie/utils/constants/colors.dart';
+import '../../../utils/constants/colors.dart';
 
 class NewContactTile extends StatelessWidget {
-  const NewContactTile({super.key, required this.icon, required this.text});
+  const NewContactTile({required this.icon, required this.text, super.key});
   final IconData icon;
   final String text;
   @override
-  Widget build(BuildContext context) {
-    return Padding(
+  Widget build(BuildContext context) => Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Theme.of(context).colorScheme.primaryContainer,
         ),
         child: Row(
           children: [
-            Container(
+            DecoratedBox(
               decoration: BoxDecoration(
                 color: tContainerColor,
                 borderRadius: BorderRadius.circular(10),
@@ -29,7 +28,7 @@ class NewContactTile extends StatelessWidget {
                     radius: 25,
                     child: Icon(icon, color: tOnBackgroundColor),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Text(text),
                 ],
               ),
@@ -38,5 +37,4 @@ class NewContactTile extends StatelessWidget {
         ),
       ),
     );
-  }
 }

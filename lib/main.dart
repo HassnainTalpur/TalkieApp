@@ -1,13 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:talkie/firebase_options.dart';
-import 'package:talkie/screens/auth/auth_screen.dart';
-import 'package:talkie/screens/home_screen/home_screen.dart';
-import 'package:talkie/screens/splash_screen/splash_screen.dart';
-import 'package:talkie/screens/test/hit.dart';
-import 'package:talkie/utils/constants/paths.dart';
-import 'package:talkie/utils/theme/theme.dart';
+import 'firebase_options.dart';
+import 'screens/splash_screen/splash_screen.dart';
+import 'utils/constants/paths.dart';
+import 'utils/theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,15 +16,13 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      getPages: pagePath,
-      title: 'Talkie',
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.dark,
-      home: SplashScreen(),
-    );
-  }
+  Widget build(BuildContext context) => GetMaterialApp(
+    debugShowCheckedModeBanner: false,
+    getPages: pagePath,
+    title: 'Talkie',
+    theme: lightTheme,
+    darkTheme: darkTheme,
+    themeMode: ThemeMode.dark,
+    home: const SplashScreen(),
+  );
 }

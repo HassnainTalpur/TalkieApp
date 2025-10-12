@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:talkie/utils/constants/colors.dart';
-import 'package:talkie/utils/constants/text.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/text.dart';
 
 class SearchContact extends StatelessWidget {
   const SearchContact({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       decoration: BoxDecoration(
         color: tContainerColor,
         borderRadius: BorderRadius.circular(10),
       ),
-      padding: EdgeInsets.all(2),
+      padding: const EdgeInsets.all(2),
 
       child: TextField(
         textInputAction: TextInputAction.search,
@@ -20,12 +19,11 @@ class SearchContact extends StatelessWidget {
           print(value);
         },
         keyboardType: TextInputType.webSearch,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           prefixIcon: Icon(Icons.search),
           hintText: 'Search Contact',
           hintStyle: TText.labelLarge,
         ),
       ),
     );
-  }
 }

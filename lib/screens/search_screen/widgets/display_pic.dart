@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:talkie/utils/constants/images.dart';
+import '../../../utils/constants/images.dart';
 
 class DisplayPic extends StatelessWidget {
   const DisplayPic({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.assetImage = AssetsImages.boyPic,
     this.radius = 30,
   });
@@ -15,8 +14,7 @@ class DisplayPic extends StatelessWidget {
 
   bool get isValidUrl => imageUrl != null && imageUrl!.trim().isNotEmpty;
   @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
+  Widget build(BuildContext context) => CircleAvatar(
       radius: radius,
       child: ClipOval(
         child: isValidUrl
@@ -27,14 +25,12 @@ class DisplayPic extends StatelessWidget {
                 imageUrl: imageUrl ?? '',
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                     CircularProgressIndicator(value: downloadProgress.progress),
-                errorWidget: (context, url, error) {
-                  return Image.asset(
+                errorWidget: (context, url, error) => Image.asset(
                     AssetsImages.boyPic,
                     fit: BoxFit.cover,
                     width: radius * 2,
                     height: radius * 2,
-                  );
-                },
+                  ),
               )
             : Image.asset(
                 AssetsImages.boyPic,
@@ -44,5 +40,4 @@ class DisplayPic extends StatelessWidget {
               ),
       ),
     );
-  }
 }

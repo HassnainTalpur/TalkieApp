@@ -3,16 +3,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import 'package:slide_to_act/slide_to_act.dart';
-import 'package:talkie/utils/constants/colors.dart';
-import 'package:talkie/utils/constants/images.dart';
-import 'package:talkie/utils/constants/text.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/images.dart';
+import '../../../utils/constants/text.dart';
 
 class WelcomeSlider extends StatelessWidget {
   const WelcomeSlider({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return SlideAction(
+  Widget build(BuildContext context) => SlideAction(
       onSubmit: () => Get.offAllNamed('/auth'),
       text: 'Slide to start now',
       textStyle: TText.labelLarge,
@@ -25,5 +24,4 @@ class WelcomeSlider extends StatelessWidget {
       outerColor: tContainerColor,
       submittedIcon: SvgPicture.asset(AssetsImages.plugSVG),
     );
-  }
 }
