@@ -4,9 +4,7 @@ import '../../controller/auth_controller.dart';
 import '../../controller/groupchat_controller.dart';
 import '../../models/groupchat_model.dart';
 import 'widgets/group_info_header.dart';
-import 'widgets/add_member_tile.dart';
 import 'widgets/kick_member_tile.dart';
-import 'widgets/update_member_tiles.dart';
 
 class GroupInfo extends StatelessWidget {
   const GroupInfo({required this.groupModel, super.key});
@@ -17,7 +15,7 @@ class GroupInfo extends StatelessWidget {
     final GroupchatController groupchatController = Get.put(
       GroupchatController(),
     );
-    final AuthController authController = Get.put(AuthController());
+    final AuthController authController = Get.find<AuthController>();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

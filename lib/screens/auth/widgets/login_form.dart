@@ -12,7 +12,7 @@ class LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-    final AuthController authController = Get.put(AuthController());
+    final AuthController authController = Get.find<AuthController>();
     return Column(
       children: [
         const SizedBox(height: 20),

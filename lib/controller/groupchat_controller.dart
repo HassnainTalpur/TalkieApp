@@ -109,7 +109,7 @@ class GroupchatController extends GetxController {
       id: chatId,
       imageUrl: uploadedUrl,
       message: message,
-      timestamp: DateTime.now().toString(),
+
       senderId: auth.currentUser!.uid,
     );
 

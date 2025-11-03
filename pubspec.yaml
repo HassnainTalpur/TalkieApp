@@ -26,7 +26,8 @@ dependencies:
   firebase_core: ^4.1.0
   firebase_auth: ^6.0.2
   cloud_firestore: ^6.0.1
-
+  firebase_database: ^12.0.3
+  firebase_messaging: ^16.0.4
   # Networking
   dio: ^5.9.0
   http: ^1.5.0
@@ -36,10 +37,18 @@ dependencies:
   cached_network_image: ^3.4.1
   emoji_picker_flutter: ^4.3.0
 
+  #Shared Prefrences & Permission Handler
+  shared_preferences: ^2.5.3
+  permission_handler: ^12.0.1
+
+  # Call Ui Kit
+  zego_uikit_prebuilt_call: ^4.19.2
+
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true

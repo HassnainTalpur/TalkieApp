@@ -10,11 +10,13 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AuthController authController = Get.put(AuthController());
+    final AuthController authController = Get.find<AuthController>();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
         title: const Text('Back'),
@@ -24,17 +26,12 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             UserInfo(
+              targetUser: userModel,
               email: userModel.email ?? '',
               name: userModel.name ?? '',
               imageUrl: userModel.profileImage ?? '',
             ),
             const Spacer(),
-            ElevatedButton(
-              onPressed: () {
-                authController.logOut();
-              },
-              child: const Text('Log Out'),
-            ),
           ],
         ),
       ),

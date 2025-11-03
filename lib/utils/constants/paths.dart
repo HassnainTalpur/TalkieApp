@@ -24,7 +24,7 @@ var pagePath = [
   ),
   GetPage(
     name: '/editprofile',
-    page: () => const EditProfile(),
+    page: () => EditProfile(),
     transition: Transition.rightToLeft,
   ),
   GetPage(

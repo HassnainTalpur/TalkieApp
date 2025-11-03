@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+import '../../controller/call_controller.dart';
+import '../../controller/permission_controller.dart';
+import '../../controller/profile_controller.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/images.dart';
 import '../../utils/constants/text.dart';
+import 'widgets/call_list.dart';
 import 'widgets/chat_list.dart';
 import 'widgets/group_list.dart';
 import 'widgets/tab_bar.dart';
@@ -20,6 +24,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final TabController tabController = TabController(length: 3, vsync: this);
+    final CallController callController = Get.find<CallController>();
+    final ProfileController profileController = Get.find<ProfileController>();
+    final PermissionController permissionController =
+        Get.find<PermissionController>();
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -54,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           children: [
             ChatList(), // Tab 1
             GroupList(), // Tab 2 placeholder
-            const Center(child: Text('Calls')), // Tab 3 placeholder
+            CallList(), // Tab 3 placeholder
           ],
         ),
       ),

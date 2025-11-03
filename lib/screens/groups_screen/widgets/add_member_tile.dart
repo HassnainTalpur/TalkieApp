@@ -23,9 +23,8 @@ class AddMemberTile extends StatelessWidget {
   final String id;
   final String? imageUrl;
   bool addContact;
-  final GroupchatController groupchatController = Get.put(
-    GroupchatController(),
-  );
+  final GroupchatController groupchatController =
+      Get.find<GroupchatController>();
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.all(5.0),

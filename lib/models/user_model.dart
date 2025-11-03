@@ -23,6 +23,27 @@ class UserModel {
     this.role,
   });
 
+  /// ✅ Updated fromJson ensures 'id' is always initialized.
+  /// If 'id' is missing from Firestore data, it will be filled manually.
+  factory UserModel.fromFirestore(
+    Map<String, dynamic> json,
+    String documentId,
+  ) {
+    return UserModel(
+      id: json['id'] ?? documentId, // ✅ ensure Firestore document ID is used
+      name: json['name'],
+      email: json['email'],
+      profileImage: json['profileImage'],
+      phoneNumber: json['phoneNumber'],
+      about: json['about'],
+      createdAt: json['createdAt'],
+      lastOnlineStatus: json['lastOnlineStatus'],
+      status: json['status'],
+      role: json['role'],
+    );
+  }
+
+  /// Keep your original fromJson for non-Firestore sources (optional)
   UserModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];

@@ -14,7 +14,7 @@ class SigninForm extends StatelessWidget {
     final TextEditingController nameController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-    final AuthController authController = AuthController();
+    final AuthController authController = Get.find<AuthController>();
     return Column(
       children: [
         const SizedBox(height: 20),
@@ -57,7 +57,7 @@ class SigninForm extends StatelessWidget {
               nameController.text,
             );
             if (FirebaseAuth.instance.currentUser != null) {
-              Get.offAllNamed('/home');
+              await Get.offAllNamed('/home');
             }
           },
           child: const PrimaryButton(

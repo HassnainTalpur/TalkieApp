@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../utils/constants/colors.dart';
-import '../../../utils/constants/images.dart';
 import '../../../utils/constants/text.dart';
 import '../../search_screen/widgets/display_pic.dart';
 

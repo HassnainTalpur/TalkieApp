@@ -8,10 +8,8 @@ import 'chat_tile.dart';
 class GroupList extends StatelessWidget {
   GroupList({super.key});
 
-  final GroupchatController groupchatController = Get.put(
-    GroupchatController(),
-  );
-
+  final GroupchatController groupchatController =
+      Get.find<GroupchatController>();
   @override
   Widget build(BuildContext context) => Scaffold(
     body: StreamBuilder(
@@ -66,6 +64,7 @@ class GroupList extends StatelessWidget {
                     Get.to(() => GroupChat(groupModel: groupUsers));
                   },
                   child: ChatTile(
+                    unReadCount: 0,
                     contactName: groupUsers.name ?? '',
                     lastChat: groupUsers.lastMessage ?? '',
                     delieveryTime: time,

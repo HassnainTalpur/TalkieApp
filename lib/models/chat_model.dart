@@ -1,10 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ChatModel {
   String? id;
   String? message;
   String? senderName;
   String? senderId;
   String? receiverId;
-  String? timestamp;
+  dynamic timestamp; // ✅ CHANGED from String? to Timestamp?
   String? readStatus;
   String? imageUrl;
   String? videoUrl;
@@ -30,47 +32,21 @@ class ChatModel {
   });
 
   ChatModel.fromJson(Map<String, dynamic> json) {
-    if (json['id'] is String) {
-      id = json['id'];
-    }
-    if (json['message'] is String) {
-      message = json['message'];
-    }
-    if (json['senderName'] is String) {
-      senderName = json['senderName'];
-    }
-    if (json['senderId'] is String) {
-      senderId = json['senderId'];
-    }
-    if (json['receiverId'] is String) {
-      receiverId = json['receiverId'];
-    }
-    if (json['timestamp'] is String) {
-      timestamp = json['timestamp'];
-    }
-    if (json['readStatus'] is String) {
-      readStatus = json['readStatus'];
-    }
-    if (json['imageUrl'] is String) {
-      imageUrl = json['imageUrl'];
-    }
-    if (json['videoUrl'] is String) {
-      videoUrl = json['videoUrl'];
-    }
-    if (json['audioUrl'] is String) {
-      audioUrl = json['audioUrl'];
-    }
-    if (json['documentUrl'] is String) {
-      documentUrl = json['documentUrl'];
-    }
-    if (json['reactions'] is List) {
-      reactions = json['reactions'] == null
-          ? null
-          : List<String>.from(json['reactions']);
-    }
-    if (json['replies'] is List) {
-      replies = json['replies'] ?? [];
-    }
+    id = json['id'];
+    message = json['message'];
+    senderName = json['senderName'];
+    senderId = json['senderId'];
+    receiverId = json['receiverId'];
+    timestamp = json['timestamp']; // Firestore already gives Timestamp
+    readStatus = json['readStatus'];
+    imageUrl = json['imageUrl'];
+    videoUrl = json['videoUrl'];
+    audioUrl = json['audioUrl'];
+    documentUrl = json['documentUrl'];
+    reactions = json['reactions'] == null
+        ? null
+        : List<String>.from(json['reactions']);
+    replies = json['replies'] ?? [];
   }
 
   Map<String, dynamic> toJson() {

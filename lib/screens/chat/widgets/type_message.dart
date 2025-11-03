@@ -18,12 +18,12 @@ class TypeMessage extends StatelessWidget {
   final RxString texting = ''.obs;
   final RxString photo = ''.obs;
 
-  final ProfileController profileController = Get.put(ProfileController());
+  final ProfileController profileController = Get.find<ProfileController>();
   final TextEditingController messageController = Get.put(
     TextEditingController(),
   );
-  final ImageController imageController = Get.put(ImageController());
-  final ChatController chatController = Get.put(ChatController());
+  final ImageController imageController = Get.find<ImageController>();
+  final ChatController chatController = Get.find<ChatController>();
 
   @override
   Widget build(BuildContext context) => Column(
@@ -87,6 +87,15 @@ class TypeMessage extends StatelessWidget {
                       imageController.image.value != null
                   ? InkWell(
                       onTap: () {
+                        profileController.getUserDetails();
+                        if (profileController.currentUser.value.id == null) {
+                          Get.snackbar(
+                            'Error',
+                            'User data not loaded yet. Please wait.',
+                          );
+                          profileController.getUserDetails();
+                          return;
+                        }
                         if (messageController.text.isNotEmpty ||
                             imageController.image.value != null) {
                           chatController.sendMessages(

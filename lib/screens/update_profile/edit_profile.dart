@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../controller/auth_controller.dart';
@@ -10,16 +11,35 @@ import '../../utils/constants/images.dart';
 import '../../utils/widgets/primary_button.dart';
 
 class EditProfile extends StatelessWidget {
-  const EditProfile({super.key});
+  EditProfile({super.key});
+  final RxBool isEditing = false.obs;
 
   @override
   Widget build(BuildContext context) {
-    final AuthController authController = AuthController();
+    final AuthController authController = Get.find<AuthController>();
+    final ImageController imageController = Get.find<ImageController>();
 
-    final ImageController imageController = Get.put(ImageController());
-    final ProfileController profileController = Get.put(ProfileController());
-    final ContactController contactController = Get.put(ContactController());
-    final RxBool isEditing = false.obs;
+    // 🛡 Defensive controller lookup — avoids crash if deleted mid-navigation
+    final ProfileController profileController = Get.find<ProfileController>();
+
+    final ContactController? contactController = Get.find<ContactController>();
+
+    // 🧩 If controller got deleted while navigating, show loader instead of crashing
+    if (profileController == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Profile'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Get.offAllNamed('/home');
+            },
+          ),
+        ),
+
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -46,7 +66,6 @@ class EditProfile extends StatelessWidget {
                   color: tContainerColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
-
                 child: Row(
                   children: [
                     Expanded(
@@ -71,7 +90,7 @@ class EditProfile extends StatelessWidget {
                                               ? FileImage(
                                                   imageController.image.value!,
                                                 )
-                                              : AssetImage(
+                                              : const AssetImage(
                                                   AssetsImages.uploadPic,
                                                 ),
                                           backgroundColor: tBackgroundColor,
@@ -79,27 +98,35 @@ class EditProfile extends StatelessWidget {
                                         ),
                                       )
                                     : CircleAvatar(
-                                        backgroundImage:
+                                        backgroundColor: tBackgroundColor,
+                                        radius: 80,
+                                        child:
                                             profileController
                                                     .currentUser
                                                     .value
                                                     .profileImage !=
                                                 null
-                                            ? NetworkImage(
-                                                profileController
-                                                    .currentUser
-                                                    .value
-                                                    .profileImage!,
+                                            ? ClipOval(
+                                                child: Image.network(
+                                                  profileController
+                                                      .currentUser
+                                                      .value
+                                                      .profileImage!,
+                                                  width: 160,
+                                                  height: 160,
+                                                  fit: BoxFit.cover,
+                                                ),
                                               )
-                                            : const AssetImage(
-                                                AssetsImages.appIconSVG,
+                                            : ClipOval(
+                                                child: SvgPicture.asset(
+                                                  AssetsImages.appIconSVG,
+                                                  width: 100,
+                                                  height: 100,
+                                                ),
                                               ),
-                                        backgroundColor: tBackgroundColor,
-                                        radius: 80,
                                       ),
                               ),
                             ),
-
                             Obx(
                               () => TextFormField(
                                 controller: profileController.nameController,
@@ -125,7 +152,6 @@ class EditProfile extends StatelessWidget {
                                 ),
                               ),
                             ),
-
                             const SizedBox(height: 10),
                             Obx(
                               () => TextField(
@@ -141,16 +167,17 @@ class EditProfile extends StatelessWidget {
                                 ),
                               ),
                             ),
-
                             const SizedBox(height: 20),
                             Obx(
                               () => InkWell(
                                 onTap: () async {
                                   isEditing.value = !isEditing.value;
+
                                   await imageController.uploadProfileImage(
                                     imageController.image,
                                     authController.auth.currentUser!.uid,
                                   );
+
                                   if (!isEditing.value) {
                                     imageController.image.value = null;
                                     final newName =
@@ -161,16 +188,9 @@ class EditProfile extends StatelessWidget {
                                       newName,
                                       newAbout,
                                     );
-
                                     await profileController.getUserDetails();
-                                    print('!!!!!!!!!!!!!!!!! NAME CONTROLLER ');
-                                    print(newAbout);
-                                    print('!!!!!!!!!!!!!!!!! NAME CONTROLLER ');
-                                    print(
-                                      profileController
-                                          .currentUser
-                                          .value
-                                          .profileImage,
+                                    debugPrint(
+                                      '✅ Profile updated: $newName, $newAbout',
                                     );
                                   }
                                 },

@@ -14,8 +14,8 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Rx<bool> searching = false.obs;
-    final ChatController chatController = Get.put(ChatController());
-    final ContactController contactController = Get.put(ContactController());
+    final ChatController chatController = Get.find<ChatController>();
+    final ContactController contactController = Get.find<ContactController>();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -66,6 +66,7 @@ class SearchScreen extends StatelessWidget {
                           Get.to(() => ChatScreen(userModel: e));
                         },
                         child: ChatTile(
+                          unReadCount: 0,
                           contactName: e.name ?? '',
                           lastChat: e.about ?? '',
 

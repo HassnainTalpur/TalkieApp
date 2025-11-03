@@ -9,10 +9,9 @@ import 'widgets/add_member_tile.dart';
 
 class CreateGroup extends StatelessWidget {
   CreateGroup({super.key});
-  final GroupchatController groupchatController = Get.put(
-    GroupchatController(),
-  );
-  final ContactController contactController = Get.put(ContactController());
+  final GroupchatController groupchatController =
+      Get.find<GroupchatController>();
+  final ContactController contactController = Get.find<ContactController>();
 
   @override
   Widget build(BuildContext context) {

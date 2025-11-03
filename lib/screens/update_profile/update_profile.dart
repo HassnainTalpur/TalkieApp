@@ -12,13 +12,12 @@ import '../../utils/widgets/primary_button.dart';
 
 class UpdateGroup extends StatelessWidget {
   UpdateGroup({super.key});
-  final GroupchatController groupchatController = Get.put(
-    GroupchatController(),
-  );
+  final GroupchatController groupchatController =
+      Get.find<GroupchatController>();
   final TextEditingController groupNameController = TextEditingController();
-  final ContactController contactController = Get.put(ContactController());
-  final ProfileController profileController = Get.put(ProfileController());
-  final ImageController imageController = Get.put(ImageController());
+  final ContactController contactController = Get.find<ContactController>();
+  final ProfileController profileController = Get.find<ProfileController>();
+  final ImageController imageController = Get.find<ImageController>();
   RxBool isEditing = false.obs;
   @override
   Widget build(BuildContext context) => Scaffold(

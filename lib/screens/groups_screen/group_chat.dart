@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -21,20 +22,14 @@ class GroupChat extends StatelessWidget {
   GroupChat({required this.groupModel, super.key});
   final GroupChatRoomModel groupModel;
   final TextEditingController messageController = TextEditingController();
-  final GroupchatController groupchatController = Get.put(
-    GroupchatController(),
-  );
-  final AuthController authController = Get.put(AuthController());
-  final ProfileController profileController = Get.put(ProfileController());
-  final ImageController imageController = Get.put(ImageController());
+  final GroupchatController groupchatController =
+      Get.find<GroupchatController>();
+  final AuthController authController = Get.find<AuthController>();
+  final ProfileController profileController = Get.find<ProfileController>();
+  final ImageController imageController = Get.find<ImageController>();
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    // floatingActionButton: FloatingActionButton(
-    //   onPressed: () {
-    //     groupchatController.sendMessages('Agggg', groupModel.id!);
-    //   },
-    // ),
     resizeToAvoidBottomInset: true,
     appBar: AppBar(
       leading: InkWell(
@@ -42,11 +37,8 @@ class GroupChat extends StatelessWidget {
           Get.to(() => GroupInfo(groupModel: groupModel));
         },
         child: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 5.0),
-            child: DisplayPic(imageUrl: groupModel.imageUrl ?? ''),
-          ),
+          padding: const EdgeInsets.only(left: 10, bottom: 5),
+          child: DisplayPic(imageUrl: groupModel.imageUrl ?? ''),
         ),
       ),
       actions: [
@@ -54,9 +46,7 @@ class GroupChat extends StatelessWidget {
         IconButton(onPressed: () {}, icon: const Icon(Icons.video_call)),
       ],
       title: InkWell(
-        onTap: () {
-          // Get.to(() => ProfileScreen(userModel: userModel));
-        },
+        onTap: () {},
         child: Row(
           children: [
             Column(
@@ -78,44 +68,60 @@ class GroupChat extends StatelessWidget {
             child: StreamBuilder(
               stream: groupchatController.getMessages(groupModel.id!),
               builder: (context, snapshot) {
+                // Prevent UI flicker during Firestore updates
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const SizedBox();
                 }
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+
+                if (!snapshot.hasData ||
+                    snapshot.data == null ||
+                    snapshot.data!.isEmpty) {
                   return const Center(child: Text('No Message Yet!'));
                 }
-                if (snapshot.hasError) {
-                  return Center(child: Text(snapshot.error.toString()));
-                } else {
-                  return ListView.builder(
-                    reverse: true,
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      final DateTime timestamp = DateTime.parse(
-                        snapshot.data![index].timestamp!,
-                      );
-                      final String formatTime = DateFormat(
-                        'hh:mm',
-                      ).format(timestamp);
-                      return Obx(
-                        () => GroupChatBubble(
-                          isComing:
-                              snapshot.data![index].senderId !=
-                              profileController.currentUser.value.id,
-                          message: snapshot.data![index].message! ?? '',
-                          time: formatTime,
-                          imageUrl: snapshot.data![index].imageUrl ?? '',
-                          status: 'status',
-                        ),
-                      );
-                    },
-                  );
-                }
+
+                final messages = snapshot.data!;
+                return ListView.builder(
+                  reverse: true,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final msg = messages[index];
+                    final t = msg.timestamp;
+
+                    // ✅ Safe timestamp handling
+                    DateTime timestamp;
+                    if (t is Timestamp) {
+                      timestamp = t.toDate();
+                    } else if (t is String) {
+                      timestamp = DateTime.tryParse(t) ?? DateTime.now();
+                    } else {
+                      timestamp = DateTime.now();
+                    }
+
+                    final formatTime = DateFormat('hh:mm').format(timestamp);
+
+                    return Obx(
+                      () => GroupChatBubble(
+                        isComing:
+                            msg.senderId !=
+                            profileController.currentUser.value.id,
+                        message: msg.message ?? '',
+                        time: formatTime,
+                        imageUrl: msg.imageUrl ?? '',
+                        status: 'status',
+                      ),
+                    );
+                  },
+                );
               },
             ),
           ),
         ),
 
+        // ✅ Optional image preview, unchanged
         Obx(
           () => imageController.image.value != null
               ? Container(
@@ -131,6 +137,7 @@ class GroupChat extends StatelessWidget {
                 )
               : const SizedBox(),
         ),
+
         TypeGroupMessage(groupChatModel: groupModel),
       ],
     ),

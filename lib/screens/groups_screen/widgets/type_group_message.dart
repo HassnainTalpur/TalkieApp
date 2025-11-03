@@ -18,14 +18,13 @@ class TypeGroupMessage extends StatelessWidget {
   final RxString texting = ''.obs;
   final RxString photo = ''.obs;
 
-  final ProfileController profileController = Get.put(ProfileController());
+  final ProfileController profileController = Get.find<ProfileController>();
   final TextEditingController messageController = Get.put(
     TextEditingController(),
   );
-  final ImageController imageController = Get.put(ImageController());
-  final GroupchatController groupchatController = Get.put(
-    GroupchatController(),
-  );
+  final ImageController imageController = Get.find<ImageController>();
+  final GroupchatController groupchatController =
+      Get.find<GroupchatController>();
 
   @override
   Widget build(BuildContext context) => Column(

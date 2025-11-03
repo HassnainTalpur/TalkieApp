@@ -1,16 +1,20 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../controller/auth_controller.dart';
+import '../../controller/call_controller.dart';
 import '../../controller/chat_controller.dart';
 import '../../controller/image_controller.dart';
 import '../../controller/profile_controller.dart';
+import '../../controller/status_controller.dart';
 import '../../models/user_model.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/text.dart';
+import '../call/call_screen.dart';
+import '../call/videocall_screen.dart';
 import '../search_screen/widgets/display_pic.dart';
 import '../user_profile/profile_screen.dart';
 import 'widgets/chat_bubble.dart';
@@ -19,14 +23,17 @@ import 'widgets/type_message.dart';
 class ChatScreen extends StatelessWidget {
   ChatScreen({required this.userModel, super.key});
   final UserModel userModel;
+  final ProfileController profileController = Get.find<ProfileController>();
   final TextEditingController messageController = TextEditingController();
-  final ChatController chatController = Get.put(ChatController());
-  final AuthController authController = Get.put(AuthController());
-  final ProfileController profileController = Get.put(ProfileController());
-  final ImageController imageController = Get.put(ImageController());
-
+  final ChatController chatController = Get.find<ChatController>();
+  final AuthController authController = Get.find<AuthController>();
+  final StatusController userStatusController = Get.find<StatusController>();
+  final ImageController imageController = Get.find<ImageController>();
+  final CallController callController = Get.find<CallController>();
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) {
+    userStatusController.listenToUser(userModel.id!);
+    return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         leading: InkWell(
@@ -42,8 +49,35 @@ class ChatScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.call)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.video_call)),
+          IconButton(
+            onPressed: () {
+              callController.makeCall(
+                userModel.id!,
+                'audio',
+                userModel.name!,
+                userModel.profileImage,
+              );
+              Get.to(() => VoiceCall(targetUser: userModel));
+              print('${userModel.id!}!@!@!@!@@!@!@!@@!@@!@@!@!@!@!!@!@!@!');
+            },
+            icon: const Icon(Icons.call),
+          ),
+          IconButton(
+            onPressed: () {
+              callController.makeCall(
+                userModel.id!,
+                'video',
+                userModel.name!,
+                userModel.profileImage,
+              );
+              print(
+                '${profileController.currentUser.value.name!}!@!@!@!@@!@!@!@@!@@!@@!@!@!@!!@!@!@!',
+              );
+              Get.to(() => VideoCall(targetUser: userModel));
+              print('${userModel.id!}!@!@!@!@@!@!@!@@!@@!@@!@!@!@!!@!@!@!');
+            },
+            icon: const Icon(Icons.video_call),
+          ),
         ],
         title: InkWell(
           onTap: () {
@@ -51,12 +85,42 @@ class ChatScreen extends StatelessWidget {
           },
           child: Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(userModel.name ?? '', style: TText.bodyLarge),
-                  const Text('online', style: TText.labelMedium),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(userModel.name ?? '', style: TText.bodyLarge),
+                    Obx(() {
+                      final status = userStatusController.status.value;
+                      final lastChanged =
+                          userStatusController.lastChanged.value;
+
+                      if (status == 'online') {
+                        return Text(
+                          'Online',
+                          style: TText.labelMedium.copyWith(
+                            color: Colors.lightGreen,
+                          ),
+                        );
+                      } else if (lastChanged != null) {
+                        final formatted = DateFormat(
+                          'MMM d, hh:mm a',
+                        ).format(lastChanged);
+                        return Text(
+                          'Last seen $formatted',
+                          style: TText.labelMedium,
+                        );
+                      } else {
+                        return Text(
+                          'Offline',
+                          style: TText.labelMedium.copyWith(color: Colors.red),
+                        );
+                      }
+                    }),
+
+                    //const Text('online', style: TText.labelMedium),
+                  ],
+                ),
               ),
             ],
           ),
@@ -70,39 +134,56 @@ class ChatScreen extends StatelessWidget {
               child: StreamBuilder(
                 stream: chatController.getMessages(userModel.id!),
                 builder: (context, snapshot) {
+                  // Handle waiting state
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    // 👇 Instead of CircularProgressIndicator (which flashes)
+                    return const SizedBox(); // keeps screen stable
                   }
-                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+
+                  // Handle errors safely
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+
+                  // Handle no data
+                  if (!snapshot.hasData ||
+                      snapshot.data == null ||
+                      snapshot.data!.isEmpty) {
                     return const Center(child: Text('No Message Yet!'));
                   }
-                  if (snapshot.hasError) {
-                    return Center(child: Text(snapshot.error.toString()));
-                  } else {
-                    return ListView.builder(
-                      reverse: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        final DateTime timestamp = DateTime.parse(
-                          snapshot.data![index].timestamp!,
-                        );
-                        final String formatTime = DateFormat(
-                          'hh:mm',
-                        ).format(timestamp);
-                        return Obx(
-                          () => ChatBubble(
-                            isComing:
-                                snapshot.data![index].senderId !=
-                                profileController.currentUser.value.id,
-                            message: snapshot.data![index].message!,
-                            time: formatTime,
-                            imageUrl: snapshot.data![index].imageUrl!,
-                            status: 'status',
-                          ),
-                        );
-                      },
-                    );
-                  }
+
+                  // ✅ Stable UI rendering
+                  final messages = snapshot.data!;
+                  return ListView.builder(
+                    reverse: true,
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      final msg = messages[index];
+
+                      // Handle timestamp safely
+                      final timestamp = (msg.timestamp is Timestamp)
+                          ? (msg.timestamp as Timestamp).toDate()
+                          : (msg.timestamp is DateTime)
+                          ? msg.timestamp as DateTime
+                          : DateTime.now();
+
+                      final formatTime = DateFormat(
+                        'hh:mm a',
+                      ).format(timestamp);
+
+                      return Obx(
+                        () => ChatBubble(
+                          isComing:
+                              msg.senderId !=
+                              profileController.currentUser.value.id,
+                          message: msg.message ?? '',
+                          time: formatTime.toString(),
+                          imageUrl: msg.imageUrl ?? '',
+                          status: 'status',
+                        ),
+                      );
+                    },
+                  );
                 },
               ),
             ),
@@ -129,4 +210,5 @@ class ChatScreen extends StatelessWidget {
         ],
       ),
     );
+  }
 }
