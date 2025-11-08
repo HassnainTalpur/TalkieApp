@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+import '../../../controller/connection_controller.dart';
 import '../../../controller/groupchat_controller.dart';
 import '../../../controller/image_controller.dart';
 import '../../../controller/profile_controller.dart';
@@ -9,7 +10,7 @@ import '../../../models/groupchat_model.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/images.dart';
 import '../../../utils/constants/text.dart';
-import '../../chat/widgets/image_picker_sheet.dart';
+import '../../chat_screen/widgets/image_picker_sheet.dart';
 
 class TypeGroupMessage extends StatelessWidget {
   TypeGroupMessage({required this.groupChatModel, super.key});
@@ -22,6 +23,8 @@ class TypeGroupMessage extends StatelessWidget {
   final TextEditingController messageController = Get.put(
     TextEditingController(),
   );
+  final ConnectionController connectionController =
+      Get.find<ConnectionController>();
   final ImageController imageController = Get.find<ImageController>();
   final GroupchatController groupchatController =
       Get.find<GroupchatController>();
@@ -88,26 +91,26 @@ class TypeGroupMessage extends StatelessWidget {
                       imageController.image.value != null
                   ? InkWell(
                       onTap: () {
-                        if (messageController.text.isNotEmpty ||
-                            imageController.image.value != null) {
-                          print(
-                            '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!${messageController.text}',
-                          );
+                        final bool isConnected =
+                            connectionController.isConnectedToInternet.value;
 
-                          print(
-                            '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@${imageController.image.value}',
-                          );
-                          groupchatController.sendMessages(
-                            messageController.text,
-                            groupChatModel.id!,
-                          );
-                          print(
-                            '@@@@@@@@@@@@@@@@@@@@@@@@2222222222222222${imageController.image.value}',
-                          );
-                          messageController.clear();
+                        if (isConnected) {
+                          if (messageController.text.isNotEmpty ||
+                              imageController.image.value != null) {
+                            groupchatController.sendMessages(
+                              messageController.text,
+                              groupChatModel.id!,
+                            );
+                            messageController.clear();
 
-                          imageController.image.value = null;
-                          texting.value = '';
+                            imageController.image.value = null;
+                            texting.value = '';
+                          }
+                        } else {
+                          Get.snackbar(
+                            'No Internet Connection',
+                            'Check your Internet Connection and Try again',
+                          );
                         }
                       },
                       child: SizedBox(

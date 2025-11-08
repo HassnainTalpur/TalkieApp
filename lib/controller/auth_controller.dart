@@ -18,15 +18,10 @@ class AuthController extends GetxController {
 
   Future<void> logIn(String email, String password) async {
     isLoading = true.obs;
+
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
-      print('⚡️ Logged in. Starting presence tracking...');
-
       // ✅ Recreate ProfileController for the new user
-      if (!Get.isRegistered<ProfileController>()) {
-        Get.put(ProfileController());
-      }
-
       // Optionally reinit others if needed
       if (!Get.isRegistered<ChatController>()) {
         Get.lazyPut(() => ChatController(), fenix: true);
@@ -38,18 +33,41 @@ class AuthController extends GetxController {
         Get.lazyPut(() => StatusController(), fenix: true);
       }
 
-      await presenceService.trackingStatus();
-      print('✅ Presence tracking started');
-
-      await Get.offAllNamed('/home');
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+      if (!Get.isRegistered<ImageController>()) {
+        Get.lazyPut(() => ImageController(), fenix: true);
       }
+
+      await presenceService.trackingStatus();
+      // ✅ Initialize before navigating
+      if (!Get.isRegistered<ProfileController>()) {
+        Get.put(ProfileController(), permanent: true);
+      } else {
+        // refresh user data if controller already exists
+        await Get.find<ProfileController>().getUserDetails();
+      }
+
+      await Get.toNamed('/home');
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case 'user-not-found':
+          errorMessage = 'No user found for that email.';
+          break;
+        case 'wrong-password':
+          errorMessage = 'Wrong password provided for that user.';
+          break;
+        case 'invalid-email':
+          errorMessage = 'The email address is not valid.';
+          break;
+        case 'user-disabled':
+          errorMessage = 'This user account has been disabled.';
+          break;
+        default:
+          errorMessage = 'An unknown error occurred: ${e.message}';
+      }
+      Get.snackbar('Error', errorMessage);
     } catch (e) {
-      print('AUTH CONTROLLER EXCEPTION  LOGIN !!!!!!!!!!!!! $e');
+      Get.snackbar('Error', 'An unexpected error occurred: ${e.toString()}');
     }
     isLoading = false.obs;
   }
@@ -62,6 +80,24 @@ class AuthController extends GetxController {
       );
 
       await inIt(email, name);
+
+      if (!Get.isRegistered<ProfileController>()) {
+        Get.put(ProfileController());
+      }
+      if (!Get.isRegistered<ImageController>()) {
+        Get.lazyPut(() => ImageController(), fenix: true);
+      }
+
+      // Optionally reinit others if needed
+      if (!Get.isRegistered<ChatController>()) {
+        Get.lazyPut(() => ChatController(), fenix: true);
+      }
+      if (!Get.isRegistered<ContactController>()) {
+        Get.lazyPut(() => ContactController(), fenix: true);
+      }
+      if (!Get.isRegistered<StatusController>()) {
+        Get.lazyPut(() => StatusController(), fenix: true);
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         Get.snackbar('weak-password', 'The password provided is too weak.');
@@ -72,7 +108,7 @@ class AuthController extends GetxController {
         );
       }
     } catch (e) {
-      print('AUTH CONTROLLER EXCEPTION SIGN UP !!!!!!!!!!!!! $e');
+      Get.snackbar('Error', 'Failed to Log In. Please try again.');
     }
   }
 
@@ -88,18 +124,12 @@ class AuthController extends GetxController {
         ..delete<ChatController>(force: true)
         ..delete<StatusController>(force: true)
         ..delete<CallController>(force: true)
-        ..delete<ImageController>(force: true)
-        // 🌀 Recreate fresh instances (if you still need them globally)
-        ..lazyPut(() => ChatController(), fenix: true)
-        ..lazyPut(() => ContactController(), fenix: true)
-        ..lazyPut(() => StatusController(), fenix: true)
-        ..lazyPut(() => ImageController(), fenix: true)
-        ..lazyPut(() => CallController(), fenix: true);
+        ..delete<ImageController>(force: true);
+      // 🌀 Recreate fresh instances (if you still need them globally)
       await Get.offAllNamed('/auth');
-
-      print('✅ Logged out, all GetX controllers cleared');
+    } on FirebaseAuthException catch (e) {
+      Get.snackbar('Error', e.code);
     } catch (e) {
-      print('❌ Error logging out: $e');
       Get.snackbar('Error', 'Failed to log out. Please try again.');
     }
   }
@@ -117,7 +147,7 @@ class AuthController extends GetxController {
           .doc(auth.currentUser!.uid)
           .set(newUser.toJson());
     } catch (e) {
-      print('AUTH CONTROLLER EXCEPTION INIT !!!!!!!!!!!!! $e');
+      Get.snackbar('Error', e.toString());
     }
   }
 }

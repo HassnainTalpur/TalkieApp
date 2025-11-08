@@ -42,11 +42,7 @@ class GroupInfo extends StatelessWidget {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
-                  print(
-                    '🔥 snapshot: ${snapshot.connectionState}, hasData: ${snapshot.hasData}, error: ${snapshot.error}',
-                  );
                   if (!snapshot.hasData) {
-                    print('⚠️ snapshot.hasData = false');
                     return const Center(child: Text('No Chats Yet'));
                   }
 

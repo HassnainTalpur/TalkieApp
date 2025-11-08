@@ -9,7 +9,6 @@ class StatusService extends GetxService {
   Future<void> trackingStatus() async {
     final user = _auth.currentUser;
     if (user == null) {
-      print('⚠️ No user logged in');
       return;
     }
 
@@ -19,32 +18,30 @@ class StatusService extends GetxService {
 
     connectedRef.onValue.listen((event) async {
       final connected = event.snapshot.value == true;
-      print('🔥 ConnectedRef triggered: $connected');
 
       if (connected) {
         await userStatusRef.onDisconnect().update({
           'state': 'offline',
           'last_changed': ServerValue.timestamp,
         });
-        print('🕹 onDisconnect registered for $uid');
 
         await userStatusRef.update({
           'state': 'online',
           'last_changed': ServerValue.timestamp,
         });
-        print('✅ $uid is ONLINE');
       }
     });
   }
 
   Future<void> stopTrackingPresence() async {
     final user = _auth.currentUser;
-    if (user == null) return;
+    if (user == null) {
+      return;
+    }
     final uid = user.uid;
     await _db.child('status/$uid').update({
       'state': 'offline',
       'last_changed': ServerValue.timestamp,
     });
-    print('❌ $uid is OFFLINE');
   }
 }

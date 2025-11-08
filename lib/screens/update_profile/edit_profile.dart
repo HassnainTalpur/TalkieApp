@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../controller/auth_controller.dart';
+import '../../controller/connection_controller.dart';
 import '../../controller/contact_controller.dart';
 import '../../controller/image_controller.dart';
 import '../../controller/profile_controller.dart';
@@ -20,39 +21,20 @@ class EditProfile extends StatelessWidget {
     final ImageController imageController = Get.find<ImageController>();
 
     // 🛡 Defensive controller lookup — avoids crash if deleted mid-navigation
-    final ProfileController profileController = Get.find<ProfileController>();
-
-    final ContactController? contactController = Get.find<ContactController>();
+    final ProfileController profileController = Get.put(ProfileController());
+    final ConnectionController connectionController =
+        Get.find<ConnectionController>();
+    final ContactController contactController = Get.find<ContactController>();
 
     // 🧩 If controller got deleted while navigating, show loader instead of crashing
-    if (profileController == null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Profile'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () {
-              Get.offAllNamed('/home');
-            },
-          ),
-        ),
-
-        body: const Center(child: CircularProgressIndicator()),
-      );
-    }
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print(profileController.nameController);
-        },
-      ),
       appBar: AppBar(
         title: const Text('Profile'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
-            Get.offAllNamed('/home');
+            Get.back();
           },
         ),
       ),
@@ -172,25 +154,36 @@ class EditProfile extends StatelessWidget {
                               () => InkWell(
                                 onTap: () async {
                                   isEditing.value = !isEditing.value;
+                                  final bool isConnected = connectionController
+                                      .isConnectedToInternet
+                                      .value;
 
-                                  await imageController.uploadProfileImage(
-                                    imageController.image,
-                                    authController.auth.currentUser!.uid,
-                                  );
-
-                                  if (!isEditing.value) {
-                                    imageController.image.value = null;
-                                    final newName =
-                                        profileController.nameController.text;
-                                    final newAbout =
-                                        profileController.aboutController.text;
-                                    await profileController.updateProfile(
-                                      newName,
-                                      newAbout,
+                                  if (isConnected) {
+                                    await imageController.uploadProfileImage(
+                                      imageController.image,
+                                      authController.auth.currentUser!.uid,
                                     );
-                                    await profileController.getUserDetails();
-                                    debugPrint(
-                                      '✅ Profile updated: $newName, $newAbout',
+
+                                    if (!isEditing.value) {
+                                      imageController.image.value = null;
+                                      final newName =
+                                          profileController.nameController.text;
+                                      final newAbout = profileController
+                                          .aboutController
+                                          .text;
+                                      await profileController.updateProfile(
+                                        newName,
+                                        newAbout,
+                                      );
+                                      await profileController.getUserDetails();
+                                      debugPrint(
+                                        '✅ Profile updated: $newName, $newAbout',
+                                      );
+                                    }
+                                  } else {
+                                    Get.snackbar(
+                                      'No Internet Connection',
+                                      'Check your Internet Connection and Try again',
                                     );
                                   }
                                 },

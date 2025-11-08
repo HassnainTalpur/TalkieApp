@@ -19,18 +19,13 @@ class GroupList extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
-        print(
-          '🔥⚠️ ⚠️ ⚠️ ⚠️  snapshot: ${snapshot.connectionState}, hasData: ${snapshot.hasData}, error: ${snapshot.error}',
-        );
         if (!snapshot.hasData) {
-          print('⚠️ snapshot.hasData = false');
           return const Center(child: Text('No Groups Yet'));
         }
 
         final groupRooms = snapshot.data!;
 
         if (groupRooms.isEmpty) {
-          print('⚠️ GroupRooms is empty');
           return const Center(child: Text('No Groups Yet'));
         }
 
@@ -45,10 +40,9 @@ class GroupList extends StatelessWidget {
                 snapshot.data![index].id!,
               ),
               builder: (context, userSnap) {
-                print(
-                  '${userSnap.data}!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
-                );
-                if (!userSnap.hasData) return const SizedBox();
+                if (!userSnap.hasData) {
+                  return const SizedBox();
+                }
                 final groupUsers = userSnap.data!;
 
                 String time = '';

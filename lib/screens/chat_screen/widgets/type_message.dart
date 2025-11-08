@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../../controller/chat_controller.dart';
+import '../../../controller/connection_controller.dart';
 import '../../../controller/image_controller.dart';
 import '../../../controller/profile_controller.dart';
 import '../../../models/user_model.dart';
@@ -22,6 +25,8 @@ class TypeMessage extends StatelessWidget {
   final TextEditingController messageController = Get.put(
     TextEditingController(),
   );
+  final ConnectionController connectionController =
+      Get.find<ConnectionController>();
   final ImageController imageController = Get.find<ImageController>();
   final ChatController chatController = Get.find<ChatController>();
 
@@ -87,28 +92,42 @@ class TypeMessage extends StatelessWidget {
                       imageController.image.value != null
                   ? InkWell(
                       onTap: () {
-                        profileController.getUserDetails();
-                        if (profileController.currentUser.value.id == null) {
-                          Get.snackbar(
-                            'Error',
-                            'User data not loaded yet. Please wait.',
-                          );
-                          profileController.getUserDetails();
-                          return;
-                        }
-                        if (messageController.text.isNotEmpty ||
-                            imageController.image.value != null) {
-                          chatController.sendMessages(
-                            userModel.id!,
-                            messageController.text,
-                            profileController.currentUser.value.name!,
-                            userModel,
-                          );
-
-                          messageController.clear();
-
-                          imageController.image.value = null;
-                          texting.value = '';
+                        try {
+                          if (profileController.currentUser.value.id == null) {
+                            Get.snackbar(
+                              'Error',
+                              'User data not loaded yet. Please wait.',
+                            );
+                            profileController.getUserDetails();
+                            return;
+                          }
+                          if (messageController.text.isNotEmpty ||
+                              imageController.image.value != null) {
+                            final bool isConnected = connectionController
+                                .isConnectedToInternet
+                                .value;
+                            if (isConnected) {
+                              final File? capturedImage =
+                                  imageController.image.value;
+                              imageController.image.value = null;
+                              chatController.sendMessages(
+                                userModel.id!,
+                                messageController.text,
+                                profileController.currentUser.value.name!,
+                                userModel,
+                                imageFile: capturedImage,
+                              );
+                              messageController.clear();
+                              texting.value = '';
+                            } else {
+                              Get.snackbar(
+                                'No Internet Connection',
+                                'Check your Internet Connection and Try again',
+                              );
+                            }
+                          }
+                        } catch (e) {
+                          Get.snackbar('Error', e.toString());
                         }
                       },
                       child: SizedBox(

@@ -87,7 +87,7 @@ class GroupchatController extends GetxController {
           .doc(groupRoomId)
           .set(groupRoomdetails.toJson());
     } catch (e) {
-      print(e);
+      Get.snackbar('Error', e.toString());
     }
   }
 
@@ -101,7 +101,6 @@ class GroupchatController extends GetxController {
       // Wait for Cloudinary upload to finish
       await imageController.uploadImage(imageController.image, chatId);
       uploadedUrl = imageController.uploadedImageUrl.value;
-      print('✅ Image uploaded: $uploadedUrl');
     }
 
     // Construct chat object AFTER upload completes
@@ -126,10 +125,8 @@ class GroupchatController extends GetxController {
           .collection('messages')
           .doc(chatId)
           .set(newChat.toJson());
-
-      print('✅ Message saved to Firestore with imageUrl: $uploadedUrl');
     } catch (e) {
-      print('❌ Error sending group message: $e');
+      Get.snackbar('Error', e.toString());
     } finally {
       // Reset after upload completes
       imageController.image.value = null;
@@ -183,13 +180,11 @@ class GroupchatController extends GetxController {
           .get();
 
       if (!groupSnapshot.exists) {
-        print('❌ Group not found');
         return;
       }
 
       final data = groupSnapshot.data();
       if (data == null) {
-        print('❌ No group data');
         return;
       }
 
@@ -207,10 +202,8 @@ class GroupchatController extends GetxController {
         'participants': members,
         'participantIds': memberIds,
       });
-
-      print('✅ Member $id removed successfully');
     } catch (e) {
-      print('❌ Error kicking member: $e');
+      Get.snackbar('Error', e.toString());
     }
   }
 

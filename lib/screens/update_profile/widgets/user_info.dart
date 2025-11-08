@@ -7,8 +7,8 @@ import '../../../models/user_model.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/images.dart';
 import '../../../utils/constants/text.dart';
-import '../../call/call_screen.dart';
-import '../../call/videocall_screen.dart';
+import '../../call_screen/videocall.dart';
+import '../../call_screen/voicecall.dart';
 import '../../search_screen/widgets/display_pic.dart';
 import 'profile_button.dart';
 

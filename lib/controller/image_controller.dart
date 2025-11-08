@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -13,7 +14,8 @@ class ImageController extends GetxController {
   var uploadedProfileUrl = ''.obs;
   var uploadedImageUrl = ''.obs;
 
-  final String cloudName = 'dgz8rnf5y'; // from Cloudinary dashboard dgz8rnf5y
+  final String cloudName =
+      dotenv.env['CLOUD_NAME']!; // from Cloudinary dashboard dgz8rnf5y
   final String uploadPreset =
       'flutter_upload'; // the unsigned preset you created
 
@@ -25,13 +27,15 @@ class ImageController extends GetxController {
         image.value = File(pickedFile.path);
       }
     } catch (e) {
-      print(e);
+      Get.snackbar('Error', e.toString());
     }
   }
 
   Future<String?> uploadImage(Rx<File?> image, String userId) async {
     isUploading.value = false;
-    if (image.value == null) return null;
+    if (image.value == null) {
+      return null;
+    }
 
     final String uploadUrl =
         'https://api.cloudinary.com/v1_1/$cloudName/image/upload';
@@ -42,7 +46,10 @@ class ImageController extends GetxController {
         'upload_preset': uploadPreset,
       });
 
-      final dio.Response response = await dio.Dio().post(uploadUrl, data: formData);
+      final dio.Response response = await dio.Dio().post(
+        uploadUrl,
+        data: formData,
+      );
       if (response.statusCode == 200) {
         uploadedImageUrl.value = response.data['secure_url'];
 
@@ -57,7 +64,9 @@ class ImageController extends GetxController {
   }
 
   Future<void> uploadProfileImage(Rx<File?> image, String userId) async {
-    if (image.value == null) return;
+    if (image.value == null) {
+      return;
+    }
 
     final String uploadUrl =
         'https://api.cloudinary.com/v1_1/$cloudName/image/upload';
@@ -67,7 +76,10 @@ class ImageController extends GetxController {
         'upload_preset': uploadPreset,
       });
 
-      final dio.Response response = await dio.Dio().post(uploadUrl, data: formData);
+      final dio.Response response = await dio.Dio().post(
+        uploadUrl,
+        data: formData,
+      );
 
       if (response.statusCode == 200) {
         uploadedProfileUrl.value = response.data['secure_url'];

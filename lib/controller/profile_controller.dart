@@ -18,16 +18,16 @@ class ProfileController extends GetxController {
   void onInit() {
     super.onInit();
     nameController = TextEditingController(text: currentUser.value.name);
-    print(nameController);
     isBlank = false.obs;
     aboutController = TextEditingController(text: currentUser.value.about);
-    print(aboutController);
     getUserDetails();
   }
 
   Future<void> getUserDetails() async {
     final user = auth.currentUser;
-    if (user == null) return;
+    if (user == null) {
+      return;
+    }
 
     try {
       final doc = await db.collection('users').doc(user.uid).get();

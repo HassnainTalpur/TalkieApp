@@ -5,47 +5,62 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../models/user_model.dart';
-
 class AppLifecycleService extends GetxService with WidgetsBindingObserver {
   final _auth = FirebaseAuth.instance;
   final _db = FirebaseDatabase.instance.ref();
-  final _database = FirebaseFirestore.instance;
-  final _firebaseMessaging = FirebaseMessaging.instance;
+  final _firestore = FirebaseFirestore.instance;
+  final _messaging = FirebaseMessaging.instance;
 
   Future<void> initNotification() async {
-    super.onInit();
-    await _firebaseMessaging.requestPermission();
-    await _firebaseMessaging.getToken().then((token) async {
-      if (token != null) {
-        print('YOUR TOKENNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN ${token}');
-        await _database.collection('users').doc(_auth.currentUser!.uid).update({
-          'role': token,
-        });
+    try {
+      await _messaging.requestPermission();
+      final token = await _messaging.getToken();
+      final user = _auth.currentUser;
+
+      if (user != null && token != null) {
+        await _firestore.collection('users').doc(user.uid).set({
+          'notificationToken': token,
+        }, SetOptions(merge: true));
+      } else {
+        debugPrint('⚠️ initNotification skipped: user or token is null');
       }
-    });
+    } catch (e, st) {
+      debugPrint('🔥 initNotification error: $e\n$st');
+    }
+  }
+
+  Future<void> _updatePresence(AppLifecycleState state) async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final ref = _db.child('status/${user.uid}');
+    try {
+      // Ensure disconnection cleanup is always queued
+      await ref.onDisconnect().set({
+        'state': 'offline',
+        'last_changed': ServerValue.timestamp,
+      });
+
+      await ref.set({
+        'state': state == AppLifecycleState.resumed ? 'online' : 'offline',
+        'last_changed': ServerValue.timestamp,
+      });
+    } catch (e) {
+      debugPrint('⚠️ Presence update failed: $e');
+    }
   }
 
   @override
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
+    initNotification();
+    _updatePresence(AppLifecycleState.resumed); // mark online at startup
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    final user = _auth.currentUser;
-    if (user == null) return;
-
-    final ref = _db.child('status/${user.uid}');
-
-    if (state == AppLifecycleState.resumed) {
-      ref.update({'state': 'online', 'last_changed': ServerValue.timestamp});
-    } else if (state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused ||
-        state == AppLifecycleState.detached) {
-      ref.update({'state': 'offline', 'last_changed': ServerValue.timestamp});
-    }
+    _updatePresence(state);
   }
 
   @override

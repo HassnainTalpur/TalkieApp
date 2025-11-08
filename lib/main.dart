@@ -1,14 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'controller/auth_controller.dart';
 import 'controller/call_controller.dart';
 import 'controller/chat_controller.dart';
+import 'controller/connection_controller.dart';
 import 'controller/contact_controller.dart';
 import 'controller/groupchat_controller.dart';
 import 'controller/image_controller.dart';
 import 'controller/lifecycle_service.dart';
-import 'controller/notifications_controller.dart';
 import 'controller/permission_controller.dart';
 import 'controller/profile_controller.dart';
 import 'controller/splash_controller.dart';
@@ -22,8 +23,9 @@ import 'utils/theme/theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await AppLifecycleService().initNotification();
+  await dotenv.load();
   setupControllers();
+
   runApp(const MyApp());
 }
 
@@ -48,13 +50,12 @@ void setupControllers() {
     ..lazyPut(() => ImageController(), fenix: true) // ⬅ register first
     ..lazyPut(() => GroupchatController(), fenix: true) // ✅ use lazyPut + fenix
     ..put(StatusService())
+    ..put(ConnectionController())
     ..put(AppLifecycleService())
     // Order of lazy controllers matters
     ..lazyPut(() => PermissionController(), fenix: true)
-    ..lazyPut(
-      () => ChatController(),
-      fenix: true,
-    ) // ⬅ depends on ImageController
+    ..lazyPut(() => ChatController(), fenix: true)
+    // ⬅ depends on ImageController
     ..lazyPut(() => CallController(), fenix: true)
     ..lazyPut(() => ContactController(), fenix: true)
     ..lazyPut(() => SplashController(), fenix: true)

@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 import '../../../controller/call_controller.dart';
 import '../../../models/user_model.dart';
 import '../../../utils/constants/text.dart';
-import '../../call/call_screen.dart';
-import '../../call/videocall_screen.dart';
+import '../../call_screen/videocall.dart';
+import '../../call_screen/voicecall.dart';
 import '../../search_screen/widgets/display_pic.dart';
 
 class CallList extends StatelessWidget {
@@ -19,22 +19,15 @@ class CallList extends StatelessWidget {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return const Center(child: CircularProgressIndicator());
       }
-      print(
-        '🔥 snapshot: ${snapshot.connectionState}, hasData: ${snapshot.hasData}, error: ${snapshot.error}',
-      );
 
       if (!snapshot.hasData) {
-        print('⚠️ snapshot.hasData = false');
         return const Center(child: Text('No Calls Yet'));
       }
 
       final calls = snapshot.data!;
       if (calls.isEmpty) {
-        print('⚠️ Call is empty');
         return const Center(child: Text('No Calls Yet'));
       }
-
-      print('✅ Showing ${calls.length} calls in UI');
 
       return ListView.builder(
         padding: EdgeInsets.zero,
@@ -50,7 +43,6 @@ class CallList extends StatelessWidget {
           final formattedTime = DateFormat(
             'yyyy-MM-dd - kk:mm',
           ).format(time).toString();
-          print(calls[index].callerName!);
           return ListTile(
             leading: DisplayPic(imageUrl: url),
             title: Text(name ?? 'Unknown Caller', style: TText.bodyMedium),

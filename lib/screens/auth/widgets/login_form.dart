@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../controller/auth_controller.dart';
+import '../../../controller/connection_controller.dart';
+import '../../../controller/image_controller.dart';
+import '../../../controller/profile_controller.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/text.dart';
 import '../../../utils/widgets/primary_button.dart';
@@ -13,6 +16,9 @@ class LoginForm extends StatelessWidget {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
     final AuthController authController = Get.find<AuthController>();
+    final ProfileController profileController = Get.find<ProfileController>();
+    final ConnectionController connectionController =
+        Get.find<ConnectionController>();
     return Column(
       children: [
         const SizedBox(height: 20),
@@ -41,15 +47,27 @@ class LoginForm extends StatelessWidget {
             ? const CircularProgressIndicator()
             : InkWell(
                 onTap: () {
-                  authController.logIn(
-                    emailController.text,
-                    passwordController.text,
-                  );
+                  final bool isConnected =
+                      connectionController.isConnectedToInternet.value;
+                  if (isConnected) {
+                    authController.logIn(
+                      emailController.text,
+                      passwordController.text,
+                    );
+                    profileController.getUserDetails();
+                  } else {
+                    Get.snackbar(
+                      'No Internet Connection',
+                      'Check your Internet Connection and Try again',
+                    );
+                  }
                 },
-                child: const PrimaryButton(
-                  buttonIcon: Icons.lock_outlined,
-                  buttonText: 'LOGIN',
-                ),
+                child: !authController.isLoading.value
+                    ? const PrimaryButton(
+                        buttonIcon: Icons.lock_outlined,
+                        buttonText: 'LOGIN',
+                      )
+                    : const CircularProgressIndicator(),
               ),
       ],
     );

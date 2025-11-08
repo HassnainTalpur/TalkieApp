@@ -7,8 +7,8 @@ import 'package:uuid/uuid.dart';
 
 import '../models/call_model.dart';
 import '../models/user_model.dart';
-import '../screens/call/call_screen.dart';
-import '../screens/call/videocall_screen.dart';
+import '../screens/call_screen/videocall.dart';
+import '../screens/call_screen/voicecall.dart';
 
 class CallController extends GetxController {
   final db = FirebaseFirestore.instance;
@@ -25,8 +25,6 @@ class CallController extends GetxController {
         // No active calls — close snackbar if any
         if (Get.isSnackbarOpen) {
           Get.closeCurrentSnackbar();
-          activeCallRoomId.value = '';
-          print('📞 Snackbar closed — call ended or deleted');
         }
         return;
       }
@@ -34,7 +32,9 @@ class CallController extends GetxController {
       final callData = callList.first;
 
       // Prevent showing snackbar multiple times for same call
-      if (activeCallRoomId.value == callData.roomId) return;
+      if (activeCallRoomId.value == callData.roomId) {
+        return;
+      }
 
       // Only show if ringing
       if (callData.status == 'ringing') {
@@ -156,9 +156,6 @@ class CallController extends GetxController {
     final senderId = auth.currentUser!.uid;
     final callId = uuid.v6();
     final id = getRoomId(senderId, recieverId);
-    print(
-      '$profileImage !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
-    );
     final newCall = CallModel(
       time: DateTime.now().toString(),
       callerName: name,
@@ -174,9 +171,7 @@ class CallController extends GetxController {
         .doc(recieverId)
         .collection('calls')
         .doc(id)
-        .set(newCall.toJson())
-        .then((_) => print('✅ Call notification sent'))
-        .catchError((e) => print('❌ Failed to send call notification: $e'));
+        .set(newCall.toJson());
 
     await db
         .collection('users')

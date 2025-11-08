@@ -70,13 +70,6 @@ class AddMemberTile extends StatelessWidget {
                               about,
                             );
                           }
-
-                          // Just for debugging: see who’s selected
-                          print(
-                            groupchatController.selectedContacts
-                                .map((p) => p.userId)
-                                .toList(),
-                          );
                         },
                       ),
                     ),

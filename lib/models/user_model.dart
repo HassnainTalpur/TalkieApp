@@ -28,20 +28,18 @@ class UserModel {
   factory UserModel.fromFirestore(
     Map<String, dynamic> json,
     String documentId,
-  ) {
-    return UserModel(
-      id: json['id'] ?? documentId, // ✅ ensure Firestore document ID is used
-      name: json['name'],
-      email: json['email'],
-      profileImage: json['profileImage'],
-      phoneNumber: json['phoneNumber'],
-      about: json['about'],
-      createdAt: json['createdAt'],
-      lastOnlineStatus: json['lastOnlineStatus'],
-      status: json['status'],
-      role: json['role'],
-    );
-  }
+  ) => UserModel(
+    id: json['id'] ?? documentId, // ✅ ensure Firestore document ID is used
+    name: json['name'],
+    email: json['email'],
+    profileImage: json['profileImage'],
+    phoneNumber: json['phoneNumber'],
+    about: json['about'],
+    createdAt: json['createdAt'],
+    lastOnlineStatus: json['lastOnlineStatus'],
+    status: json['status'],
+    role: json['role'],
+  );
 
   /// Keep your original fromJson for non-Firestore sources (optional)
   UserModel.fromJson(Map<String, dynamic> json) {

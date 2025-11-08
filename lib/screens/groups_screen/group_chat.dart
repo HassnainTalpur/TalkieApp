@@ -41,10 +41,6 @@ class GroupChat extends StatelessWidget {
           child: DisplayPic(imageUrl: groupModel.imageUrl ?? ''),
         ),
       ),
-      actions: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.call)),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.video_call)),
-      ],
       title: InkWell(
         onTap: () {},
         child: Row(

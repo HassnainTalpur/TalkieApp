@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
@@ -8,12 +11,26 @@ import '../models/chatroom_model.dart';
 import '../models/user_model.dart';
 import 'auth_controller.dart';
 import 'image_controller.dart';
+import 'lifecycle_service.dart';
 import 'profile_controller.dart';
 
 class ChatController extends GetxController {
   final auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
   final uuid = Uuid();
+  final dio = Dio(
+    BaseOptions(
+      baseUrl:
+          'https://notify-jade.vercel.app/', // Replace with your API base URL
+      connectTimeout: const Duration(milliseconds: 5000),
+      receiveTimeout: const Duration(milliseconds: 3000),
+      headers: {
+        'Content-Type': 'application/json',
+        // Add other headers as needed
+      },
+    ),
+  );
+
   final RxBool isLoading = false.obs;
   AuthController authController = Get.find<AuthController>();
   ImageController imageController = Get.find<ImageController>();
@@ -37,12 +54,8 @@ class ChatController extends GetxController {
     }
 
     if (currentUser.id!.compareTo(targetUser.id!) > 0) {
-      print('THIS SHIT IS THE SENDER ${currentUser.id!}');
-      print('THIS SHIT IS THE RECEIVER ${targetUser.id}');
       return (sender: currentUser, receiver: targetUser);
     } else {
-      print('THIS SHIT IS THE SENDER ${targetUser.id!}');
-      print('THIS SHIT IS THE RECEIVER ${currentUser.id!}');
       return (sender: targetUser, receiver: currentUser);
     }
   }
@@ -54,7 +67,9 @@ class ChatController extends GetxController {
     final currentUserId = auth.currentUser!.uid;
 
     final roomSnapshot = await roomRef.get();
-    if (!roomSnapshot.exists) return;
+    if (!roomSnapshot.exists) {
+      return;
+    }
 
     final data = roomSnapshot.data()!;
     final senderId = data['sender']['id'];
@@ -67,26 +82,45 @@ class ChatController extends GetxController {
     }
   }
 
+  Future<void> sendNotification(
+    String token,
+    String name,
+    String message,
+  ) async {
+    if (token == '') {
+      await AppLifecycleService().initNotification();
+      return;
+    }
+    try {
+      await dio.post(
+        'send', // Endpoint for creating a post
+        data: {"title": name, "body": message, "fcmToken": token},
+      );
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
+  }
+
   Future<void> sendMessages(
     String targetUserId,
     String message,
     String name,
-    UserModel targetUser,
-  ) async {
+    UserModel targetUser, {
+    File? imageFile,
+  }) async {
+    imageController.image.value = null;
     isLoading.value = true;
     final roomId = getRoomId(targetUserId);
     final chatId = uuid.v6();
     final roomRef = db.collection('chats').doc(roomId);
     final snapshot = await roomRef.get();
-
     final senderReceiver = getSenderReceiverModel(targetUser);
-
+    final token = targetUser.role ?? '';
     // unReadMessNo belongs to sender
     // toUnreadCount belongs to receiver
     final sender = senderReceiver.sender;
 
     final receiver = senderReceiver.receiver;
-    print(roomId);
 
     if (!snapshot.exists) {
       final roomDetail = ChatRoomModel(
@@ -99,18 +133,41 @@ class ChatController extends GetxController {
       );
       await db.collection('chats').doc(roomId).set(roomDetail.toJson());
     }
+    String imageUrl = '';
 
     // Upload image if one exists
-    if (imageController.image.value != null) {
-      await imageController.uploadImage(
-        imageController.image,
-        profileController.auth.currentUser!.uid,
-      );
+    if (imageFile != null) {
+      print('🟢 Starting upload with path: ${imageFile.path}');
+
+      try {
+        // Convert File to Rx<File?> for the uploadImage method
+        final Rx<File?> rxImage = Rx<File?>(imageFile);
+
+        final uploadedUrl = await imageController.uploadImage(
+          rxImage,
+          profileController.auth.currentUser!.uid,
+        );
+
+        print('🟢 Upload complete, URL: $uploadedUrl');
+        imageUrl = uploadedUrl ?? '';
+
+        if (imageUrl.isEmpty) {
+          print('🔴 WARNING: Image URL is empty after upload!');
+        } else {
+          print('🟢 Image URL set successfully: $imageUrl');
+        }
+      } catch (e) {
+        print('🔴 UPLOAD ERROR: $e');
+        Get.snackbar('Upload Error', e.toString());
+      }
+    } else {
+      print('🟡 No image to upload');
     }
+    print('🔵 Creating chat with imageUrl: "$imageUrl"');
 
     final newChat = ChatModel(
       readStatus: 'unread',
-      imageUrl: imageController.uploadedImageUrl.value,
+      imageUrl: imageUrl,
       id: chatId,
       timestamp: FieldValue.serverTimestamp(),
       message: message,
@@ -127,12 +184,6 @@ class ChatController extends GetxController {
           .collection('messages')
           .doc(chatId); // Get current user ID
       final currentUserId = auth.currentUser!.uid;
-
-      print('currentUser.id: ${profileController.currentUser.value.id}');
-      print('targetUser.id: ${targetUser.id}');
-
-      print('SENDERRRRRRRRRRRRRRRR ${sender.id}');
-      print('RECEIVERRRRRRRRRRR ${receiver.id}');
 
       // If logged-in user is the consistent sender
       if (currentUserId == sender.id.toString()) {
@@ -159,13 +210,13 @@ class ChatController extends GetxController {
         });
 
       await batch.commit();
+      print('🟢 Message saved to Firestore with imageUrl: "$imageUrl"');
+      await sendNotification(token, name, message);
     } catch (e) {
-      print('🔥 sendMessages error: $e');
+      Get.snackbar('Error', e.toString());
     } finally {
       isLoading.value = false;
       imageController.uploadedImageUrl.value = '';
-      imageController.uploadedProfileUrl.value = '';
-      imageController.image.value = null;
     }
   }
 

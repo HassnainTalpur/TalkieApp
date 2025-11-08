@@ -34,10 +34,6 @@ class GroupInfoHeader extends StatelessWidget {
               Text(name, style: TText.bodyMedium),
 
               const SizedBox(height: 10),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [],
-              ),
             ],
           ),
         ),
